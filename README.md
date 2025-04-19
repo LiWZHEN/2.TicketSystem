@@ -3,7 +3,7 @@
 
 ## Part 0: CMU15445 Project0~2
 
-The repository: <https://git@github.com:LiWZHEN/CMU15445.git>
+The repository: <https://github.com/LiWZHEN/CMU15445.git>
 
 ## Part 1: B+ Tree
 
