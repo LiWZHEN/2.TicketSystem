@@ -3,6 +3,6 @@ Ticket-System-2024-main/testcases
 Ticket-System-2024-main/bonus.md
 Ticket-System-2024-main/management_system.md
 Ticket-System-2024-main/README.md
-.idea
+.idea/
 cmake-build-debug
 CMakeLists.txt
