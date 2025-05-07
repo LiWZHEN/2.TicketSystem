@@ -83,10 +83,10 @@ namespace sjtu {
       long long size = 0ll;
     };
 
-    // static constexpr long PAGE_SIZE = (FILE_UNIT_SIZE - sizeof(int) * 2 - sizeof(long)) / (sizeof(index_value) + sizeof(int)); // todo
-    static constexpr long PAGE_SIZE = 5;
+    static constexpr long PAGE_SIZE = (FILE_UNIT_SIZE - sizeof(int) * 2 - sizeof(long)) / (sizeof(index_value) + sizeof(int)); // todo
+    // static constexpr long PAGE_SIZE = 5;
 
-  public: // todo: delete "public"
+  // public: // todo: delete "public"
     struct block {
       int block_size;
       long next_block;
