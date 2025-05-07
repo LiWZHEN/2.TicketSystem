@@ -58,16 +58,6 @@ namespace sjtu {
       hash_pair index;
       int value = 0;
 
-      /*index_value &operator=(const index_value &other) {
-        if (this == &other) {
-          return *this;
-        }
-        this->index.hash1 = other.index.hash1;
-        this->index.hash2 = other.index.hash2;
-        this->value = other.value;
-        return *this;
-      }*/
-
       bool operator==(const index_value &other) const {
         return index == other.index && value == other.value;
       }
@@ -93,8 +83,8 @@ namespace sjtu {
       long long size = 0ll;
     };
 
-    // static constexpr long PAGE_SIZE = (FILE_UNIT_SIZE - sizeof(int) * 2 - sizeof(long)) / (sizeof(index_value) + sizeof(int)); // todo
-    static constexpr long PAGE_SIZE = 5;
+    static constexpr long PAGE_SIZE = (FILE_UNIT_SIZE - sizeof(int) * 2 - sizeof(long)) / (sizeof(index_value) + sizeof(int)); // todo
+    // static constexpr long PAGE_SIZE = 5;
 
     struct block {
       int block_size;
@@ -460,6 +450,7 @@ namespace sjtu {
             data.r_min[i + 1] = data.r_min[i];
           }
           data.r_min[0] = l_brother.r_min[l_brother.block_size - 1];
+          ++data.block_size;
           data_processor.WriteBack(data, pos);
           father.r_min[target_block_ind - 1] = data.r_min[0];
           data_processor.WriteBack(father, father_pos);
@@ -579,6 +570,7 @@ namespace sjtu {
           data.r_min[0] = father.r_min[target_block_ind - 1];
           data.son_pos[1] = data.son_pos[0];
           data.son_pos[0] = l_brother.son_pos[l_brother.block_size];
+          ++data.block_size;
           data_processor.WriteBack(data, pos);
           father.r_min[target_block_ind - 1] = l_brother.r_min[l_brother.block_size - 1];
           data_processor.WriteBack(father, father_pos);
