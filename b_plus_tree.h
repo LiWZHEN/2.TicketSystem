@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include "file_processor.h"
-// #include <vector>
 #include "vector.hpp"
 
 namespace sjtu {

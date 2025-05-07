@@ -17,9 +17,8 @@ namespace sjtu {
 
   public:
     T *vct = nullptr;
-    size_t beg_ind = 0;
-    size_t size_ = 0;
-    size_t capacity_ = 0;
+    size_t size_;
+    size_t capacity_;
     /**
      * TODO
      * a type for actions of the elements of a vector, and you should write
@@ -71,7 +70,7 @@ namespace sjtu {
         if (v == nullptr) {
           return iterator();
         }
-        return iterator(v->vct + (p - v->vct + n) % v->capacity_, v);
+        return iterator(p + n, v);
       }
 
       iterator operator-(const int &n) const {
@@ -79,7 +78,7 @@ namespace sjtu {
         if (v == nullptr) {
           return iterator();
         }
-        return iterator(v->vct + (p - v->vct - n + v->capacity_) % v->capacity_, v);
+        return iterator(p - n, v);
       }
 
       // return the distance between two iterators,
@@ -97,7 +96,7 @@ namespace sjtu {
         if (v == nullptr) {
           return *this;
         }
-        p = v->vct + (p - v->vct + n) % v->capacity_;
+        p += n;
         return *this;
       }
 
@@ -106,7 +105,7 @@ namespace sjtu {
         if (v == nullptr) {
           return iterator();
         }
-        p = v->vct + (p - v->vct + v->capacity_ - n) % v->capacity_;
+        p -= n;
         return *this;
       }
 
@@ -118,7 +117,7 @@ namespace sjtu {
           return iterator();
         }
         iterator tmp(p, v);
-        p = v->vct + (p - v->vct + 1) % v->capacity_;
+        p += 1;
         return tmp;
       }
 
@@ -129,7 +128,7 @@ namespace sjtu {
         if (v == nullptr) {
           return *this;
         }
-        p = v->vct + (p - v->vct + 1) % v->capacity_;
+        p += 1;
         return *this;
       }
 
@@ -141,7 +140,7 @@ namespace sjtu {
           return iterator();
         }
         iterator tmp(p, v);
-        p = v->vct + (p - v->vct + v->capacity_ - 1) % v->capacity_;
+        p -= 1;
         return tmp;
       }
 
@@ -152,7 +151,7 @@ namespace sjtu {
         if (v == nullptr) {
           return iterator();
         }
-        p = v->vct + (p - v->vct + v->capacity_ - 1) % v->capacity_;
+        p -= 1;
         return *this;
       }
 
@@ -218,7 +217,7 @@ namespace sjtu {
         if (v == nullptr) {
           return const_iterator();
         }
-        return const_iterator(v->vct + (p - v->vct + n) % v->capacity_, v);
+        return const_iterator(p + n, v);
       }
 
       const_iterator operator-(const int &n) const {
@@ -226,7 +225,7 @@ namespace sjtu {
         if (v == nullptr) {
           return const_iterator();
         }
-        return const_iterator(v->vct + (p - v->vct - n + v->capacity_) % v->capacity_, v);
+        return const_iterator(p - n, v);
       }
 
       // return the distance between two iterators,
@@ -244,7 +243,7 @@ namespace sjtu {
         if (v == nullptr) {
           return *this;
         }
-        p = v->vct + (p - v->vct + n) % v->capacity_;
+        p += n;
         return *this;
       }
 
@@ -253,7 +252,7 @@ namespace sjtu {
         if (v == nullptr) {
           return const_iterator();
         }
-        p = v->vct + (p - v->vct + v->capacity_ - n) % v->capacity_;
+        p -= n;
         return *this;
       }
 
@@ -265,7 +264,7 @@ namespace sjtu {
           return const_iterator();
         }
         const_iterator tmp(p, v);
-        p = v->vct + (p - v->vct + 1) % v->capacity_;
+        p += 1;
         return tmp;
       }
 
@@ -276,7 +275,7 @@ namespace sjtu {
         if (v == nullptr) {
           return *this;
         }
-        p = v->vct + (p - v->vct + 1) % v->capacity_;
+        p += 1;
         return *this;
       }
 
@@ -288,7 +287,7 @@ namespace sjtu {
           return const_iterator();
         }
         const_iterator tmp(p, v);
-        p = v->vct + (p - v->vct + v->capacity_ - 1) % v->capacity_;
+        p -= 1;
         return tmp;
       }
 
@@ -299,7 +298,7 @@ namespace sjtu {
         if (v == nullptr) {
           return const_iterator();
         }
-        p = v->vct + (p - v->vct + v->capacity_ - 1) % v->capacity_;
+        p -= 1;
         return *this;
       }
 
@@ -341,14 +340,12 @@ namespace sjtu {
       vct = alloc.allocate(256);
       capacity_ = 256;
       size_ = 0;
-      beg_ind = 0;
     }
 
     vector(const vector &other) {
       capacity_ = other.capacity_;
       vct = alloc.allocate(other.capacity_);
       size_ = other.size_;
-      beg_ind = 0;
       for (size_t i = 0; i < size_; ++i) {
         std::allocator_traits<decltype(alloc)>::construct(alloc, vct + i, other[i]);
       }
@@ -359,7 +356,7 @@ namespace sjtu {
      */
     ~vector() {
       for (size_t i = 0; i < size_; ++i) {
-        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + (beg_ind + i) % capacity_);
+        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + i);
       }
       alloc.deallocate(vct, capacity_);
     }
@@ -373,11 +370,10 @@ namespace sjtu {
         std::allocator_traits<decltype(alloc)>::construct(alloc, new_vct + i, (*this)[i]);
       }
       for (size_t i = 0; i < size_; ++i) {
-        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + (beg_ind + i) % capacity_);
+        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + i);
       }
       alloc.deallocate(vct, capacity_);
       capacity_ *= 2;
-      beg_ind = 0;
       vct = new_vct;
     }
 
@@ -389,13 +385,12 @@ namespace sjtu {
         return *this;
       }
       for (size_t i = 0; i < size_; ++i) {
-        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + (beg_ind + i) % capacity_);
+        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + i);
       }
       alloc.deallocate(vct, capacity_);
       capacity_ = other.capacity_;
       vct = alloc.allocate(capacity_);
       size_ = other.size_;
-      beg_ind = 0;
       for (size_t i = 0; i < size_; ++i) {
         std::allocator_traits<decltype(alloc)>::construct(alloc, vct + i, other[i]);
       }
@@ -410,14 +405,14 @@ namespace sjtu {
       if (pos >= size_) {
         throw index_out_of_bound();
       }
-      return *(vct + (beg_ind + pos) % capacity_);
+      return *(vct + pos);
     }
 
     const T &at(const size_t &pos) const {
       if (pos >= size_) {
         throw index_out_of_bound();
       }
-      return *(vct + (beg_ind + pos) % capacity_);
+      return *(vct + pos);
     }
 
     /**
@@ -430,14 +425,14 @@ namespace sjtu {
       if (pos >= size_) {
         throw index_out_of_bound();
       }
-      return *(vct + (beg_ind + pos) % capacity_);
+      return *(vct + pos);
     }
 
     const T &operator[](const size_t &pos) const {
       if (pos >= size_) {
         throw index_out_of_bound();
       }
-      return *(vct + (beg_ind + pos) % capacity_);
+      return *(vct + pos);
     }
 
     /**
@@ -448,7 +443,7 @@ namespace sjtu {
       if (size_ == 0) {
         throw container_is_empty();
       }
-      return *(vct + beg_ind);
+      return *vct;
     }
 
     /**
@@ -459,38 +454,38 @@ namespace sjtu {
       if (size_ == 0) {
         throw container_is_empty();
       }
-      return *(vct + (beg_ind + size_ - 1) % capacity_);
+      return *(vct + size_ - 1);
     }
 
     /**
      * returns an iterator to the beginning.
      */
     iterator begin() {
-      return iterator(vct + beg_ind, this);
+      return iterator(vct, this);
     }
 
     const_iterator begin() const {
-      return const_iterator(const_cast<const T *>(vct + beg_ind), const_cast<const vector *>(this));
+      return const_iterator(const_cast<const T *>(vct), const_cast<const vector *>(this));
     }
 
     const_iterator cbegin() const {
-      return const_iterator(const_cast<const T *>(vct + beg_ind), const_cast<const vector *>(this));
+      return const_iterator(const_cast<const T *>(vct), const_cast<const vector *>(this));
     }
 
     /**
      * returns an iterator to the end.
      */
     iterator end() {
-      return iterator(vct + (beg_ind + size_) % capacity_, this);
+      return iterator(vct + size_, this);
     }
 
     const_iterator end() const {
-      return const_iterator(const_cast<const T *>(vct + (beg_ind + size_) % capacity_),
+      return const_iterator(const_cast<const T *>(vct + size_),
                             const_cast<const vector *>(this));
     }
 
     const_iterator cend() const {
-      return const_iterator(const_cast<const T *>(vct + (beg_ind + size_) % capacity_),
+      return const_iterator(const_cast<const T *>(vct + size_),
                             const_cast<const vector *>(this));
     }
 
@@ -513,10 +508,9 @@ namespace sjtu {
      */
     void clear() {
       for (size_t i = 0; i < size_; ++i) {
-        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + (beg_ind + i) % capacity_);
+        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + i);
       }
       size_ = 0;
-      beg_ind = 0;
     }
 
     /**
@@ -533,12 +527,12 @@ namespace sjtu {
         T *new_vct = nullptr;
         new_vct = alloc.allocate(capacity_ * 2); // T** new_vct = new T*[capacity_ * 2];
         for (size_t i = 0; i < ind; ++i) {
-          std::allocator_traits<decltype(alloc)>::construct(alloc, new_vct + i, *(vct + (beg_ind + i) % capacity_));
+          std::allocator_traits<decltype(alloc)>::construct(alloc, new_vct + i, *(vct + i));
           // new_vct[i] = new T(*vct[(beg_ind + i) % capacity_]);
         }
         std::allocator_traits<decltype(alloc)>::construct(alloc, new_vct + ind, value); // new_vct[ind] = new T(value);
         for (size_t i = ind; i < size_; ++i) {
-          std::allocator_traits<decltype(alloc)>::construct(alloc, new_vct + i + 1, *(vct + (beg_ind + i) % capacity_));
+          std::allocator_traits<decltype(alloc)>::construct(alloc, new_vct + i + 1, *(vct + i));
           // new_vct[i + 1] = new T(*vct[(beg_ind + i) % capacity_]);
         }
         const size_t tmp_size = size_ + 1;
@@ -547,28 +541,17 @@ namespace sjtu {
         alloc.deallocate(vct, capacity_); // delete[] vct;
         capacity_ *= 2;
         vct = new_vct;
-        beg_ind = 0;
-        return iterator(vct + (beg_ind + ind) % capacity_, this);
+        return iterator(vct + ind, this);
       }
-      if (ind < size_ / 2) {
-        std::allocator_traits<decltype(alloc)>::construct(alloc, vct + (beg_ind - 1 + capacity_) % capacity_, value);
-        // vct[(beg_ind - 1 + capacity_) % capacity_] = new T(value);
-        for (size_t i = 0; i < ind; ++i) {
-          vct[(beg_ind + i - 1 + capacity_) % capacity_] = vct[(beg_ind + i) % capacity_];
-        }
-        beg_ind = (beg_ind - 1 + capacity_) % capacity_;
-        vct[(beg_ind + ind) % capacity_] = value;
-        ++size_;
-        return iterator(vct + (beg_ind + ind) % capacity_, this);
-      }
-      std::allocator_traits<decltype(alloc)>::construct(alloc, vct + (beg_ind + size_) % capacity_, value);
+
+      std::allocator_traits<decltype(alloc)>::construct(alloc, vct + size_, value);
       // vct[(beg_ind + size_) % capacity_] = new T(value);
       for (size_t i = size_; i > ind; --i) {
-        vct[(beg_ind + i) % capacity_] = vct[(beg_ind + i - 1) % capacity_];
+        vct[i] = vct[i - 1];
       }
-      vct[(beg_ind + ind) % capacity_] = value;
+      vct[ind] = value;
       ++size_;
-      return iterator(vct + (beg_ind + ind) % capacity_, this);
+      return iterator(vct + ind, this);
     }
 
     /**
@@ -576,7 +559,7 @@ namespace sjtu {
      * returns an iterator pointing to the inserted value.
      */
     iterator insert(iterator pos, const T &value) {
-      const size_t ind = (pos - begin() + capacity_) % capacity_;
+      const size_t ind = pos - begin();
       if (ind > size_) {
         throw index_out_of_bound();
       }
@@ -596,22 +579,14 @@ namespace sjtu {
         clear();
         return end();
       }
-      if (ind < size_ / 2) {
-        for (size_t i = ind; i > 0; --i) {
-          vct[(beg_ind + i) % capacity_] = vct[(beg_ind + i - 1) % capacity_];
-        }
-        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + beg_ind); // delete vct[beg_ind];
-        beg_ind = (beg_ind + 1) % capacity_;
-        --size_;
-        return iterator(vct + beg_ind, this);
-      }
+
       for (size_t i = ind + 1; i < size_; ++i) {
-        vct[(beg_ind + i - 1) % capacity_] = vct[(beg_ind + i) % capacity_];
+        vct[i - 1] = vct[i];
       }
       --size_;
-      std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + (beg_ind + size_) % capacity_);
+      std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + size_);
       // delete vct[(beg_ind + size_) % capacity_];
-      return iterator(vct + (beg_ind + size_) % capacity_, this);
+      return iterator(vct + ind, this); // todo: originally (vct + size_)
     }
 
     /**
@@ -620,7 +595,7 @@ namespace sjtu {
      * If the iterator pos refers the last element, the end() iterator is returned.
      */
     iterator erase(iterator pos) {
-      const size_t ind = (pos - begin() + capacity_) % capacity_;
+      const size_t ind = pos - begin();
       if (ind >= size_) {
         throw index_out_of_bound();
       }
@@ -638,7 +613,7 @@ namespace sjtu {
       if (size_ == capacity_) {
         DoubleSpace();
       }
-      std::allocator_traits<decltype(alloc)>::construct(alloc, vct + (beg_ind + size_) % capacity_, value);
+      std::allocator_traits<decltype(alloc)>::construct(alloc, vct + size_, value);
       // vct[(beg_ind + (size_++)) % capacity_] = new T(value);
       ++size_;
     }
@@ -654,7 +629,7 @@ namespace sjtu {
       if (size_ == 1) {
         clear();
       } else {
-        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + (beg_ind + size_ - 1) % capacity_);
+        std::allocator_traits<decltype(alloc)>::destroy(alloc, vct + size_ - 1);
         // delete vct[(beg_ind + size_ - 1) % capacity_];
         --size_;
       }
