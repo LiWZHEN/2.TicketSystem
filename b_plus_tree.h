@@ -462,7 +462,7 @@ namespace sjtu {
           return;
         }
         if (r_brother_pos != -1 && r_brother.block_size > PAGE_SIZE / 2) {
-          data.r_min[data.block_size] = father.r_min[target_block_ind];
+          data.r_min[data.block_size] = r_brother.r_min[0];
           ++data.block_size;
           data_processor.WriteBack(data, pos);
           father.r_min[target_block_ind] = r_brother.r_min[1];
