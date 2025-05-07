@@ -93,7 +93,7 @@ namespace sjtu {
       long long size = 0ll;
     };
 
-    static constexpr long PAGE_SIZE = 400; // todo
+    static constexpr long PAGE_SIZE = (FILE_UNIT_SIZE - sizeof(int) * 2 - sizeof(long)) / (sizeof(index_value) + sizeof(int)); // todo
 
     struct block {
       int block_size;
@@ -481,7 +481,7 @@ namespace sjtu {
         }
 
         // cannot be tackled with borrowing, try to merge
-        if (father.block_size == 1) {
+        if (father_pos == map_information.root && father.block_size == 1) {
           if (l_brother_pos != -1) {
             for (int i = 0; i < data.block_size; ++i) {
               l_brother.r_min[l_brother.block_size + i] = data.r_min[i];
@@ -603,7 +603,7 @@ namespace sjtu {
         }
 
         // cannot be tackled with borrowing, try to merge
-        if (father.block_size == 1) {
+        if (father_pos == map_information.root && father.block_size == 1) {
           if (l_brother_pos != -1) {
             l_brother.r_min[l_brother.block_size] = father.r_min[0];
             for (int i = 0; i < data.block_size; ++i) {
