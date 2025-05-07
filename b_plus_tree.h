@@ -93,7 +93,8 @@ namespace sjtu {
       long long size = 0ll;
     };
 
-    static constexpr long PAGE_SIZE = (FILE_UNIT_SIZE - sizeof(int) * 2 - sizeof(long)) / (sizeof(index_value) + sizeof(int)); // todo
+    // static constexpr long PAGE_SIZE = (FILE_UNIT_SIZE - sizeof(int) * 2 - sizeof(long)) / (sizeof(index_value) + sizeof(int)); // todo
+    static constexpr long PAGE_SIZE = 5;
 
     struct block {
       int block_size;
@@ -266,7 +267,7 @@ namespace sjtu {
         } else if (data.r_min[r] > to_insert) {
           for (int i = data.block_size - 1; i >= r; --i) {
             data.r_min[i + 1] = data.r_min[i];
-            data.son_pos[i + 1] = data.son_pos[i + 1];
+            data.son_pos[i + 2] = data.son_pos[i + 1];
           }
           data.r_min[r] = to_insert;
           data.son_pos[r + 1] = new_block_pos;
@@ -333,7 +334,7 @@ namespace sjtu {
         } else if (data.r_min[r] > to_insert) {
           for (int i = data.block_size - 1; i >= r; --i) {
             data.r_min[i + 1] = data.r_min[i];
-            data.son_pos[i + 1] = data.son_pos[i + 1];
+            data.son_pos[i + 2] = data.son_pos[i + 1];
           }
           data.r_min[r] = to_insert;
           data.son_pos[r + 1] = new_block_pos;

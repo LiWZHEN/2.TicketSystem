@@ -5,4 +5,5 @@ Ticket-System-2024-main/management_system.md
 Ticket-System-2024-main/README.md
 .idea/
 cmake-build-debug
-data
+test.cpp
+test
