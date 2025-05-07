@@ -3,8 +3,8 @@
 
 #include <fstream>
 #include "file_processor.h"
-#include <vector>
-// #include "vector.hpp"
+// #include <vector>
+#include "vector.hpp"
 
 namespace sjtu {
   template <typename Value>
@@ -153,7 +153,7 @@ namespace sjtu {
 
       block data = data_processor.ReadBlock(map_information.root);
       long pos = map_information.root;
-      std::vector<path> route;
+      vector<path> route;
       while (data.son_pos[0] != -1) {
         route.push_back({data, pos});
         int l = 0, r = data.block_size - 1;
@@ -362,7 +362,7 @@ namespace sjtu {
       // record the route when trying to find the leaf block
       block data = data_processor.ReadBlock(map_information.root);
       long pos = map_information.root;
-      std::vector<path> route;
+      vector<path> route;
       while (data.son_pos[0] != -1) {
         route.push_back({data, pos});
         int l = 0, r = data.block_size - 1;
@@ -664,9 +664,9 @@ namespace sjtu {
       data_processor.WriteBack(data, pos);
     }
 
-    std::vector<Value> Find(const std::string &index) {
+    vector<Value> Find(const std::string &index) {
       const hash_pair ind = db_hash(index);
-      std::vector<Value> ans;
+      vector<Value> ans;
 
       // empty bpt cannot have target index
       if (map_information.root == -1) {
