@@ -47,12 +47,14 @@ public:
     }
     file.seekp(index * FILE_UNIT_SIZE);
     file.write(reinterpret_cast<char *>(&block), sizeof(block));
+    file.flush();
     return index;
   }
 
   void WriteBack(Block &block, const int index) {
     file.seekp(index * FILE_UNIT_SIZE);
     file.write(reinterpret_cast<char *>(&block), sizeof(block));
+    file.flush();
   }
 };
 
