@@ -93,7 +93,7 @@ namespace sjtu {
       long long size = 0ll;
     };
 
-    static constexpr long PAGE_SIZE = 500; // todo
+    static constexpr long PAGE_SIZE = 400; // todo
 
     struct block {
       int block_size;
@@ -487,6 +487,7 @@ namespace sjtu {
               l_brother.r_min[l_brother.block_size + i] = data.r_min[i];
             }
             l_brother.block_size += data.block_size;
+            l_brother.next_block = data.next_block;
             map_information.root = l_brother_pos;
             data_processor.WriteBack(l_brother, l_brother_pos);
           } else {
@@ -494,6 +495,7 @@ namespace sjtu {
               data.r_min[data.block_size + i] = r_brother.r_min[i];
             }
             data.block_size += r_brother.block_size;
+            data.next_block = r_brother.next_block;
             map_information.root = pos;
             data_processor.WriteBack(data, pos);
           }
@@ -504,6 +506,7 @@ namespace sjtu {
             l_brother.r_min[l_brother.block_size + i] = data.r_min[i];
           }
           l_brother.block_size += data.block_size;
+          l_brother.next_block = data.next_block;
           data_processor.WriteBack(l_brother, l_brother_pos);
           for (int i = target_block_ind; i < father.block_size; ++i) {
             father.r_min[i - 1] = father.r_min[i];
@@ -516,6 +519,7 @@ namespace sjtu {
             data.r_min[data.block_size + i] = r_brother.r_min[i];
           }
           data.block_size += r_brother.block_size;
+          data.next_block = r_brother.next_block;
           data_processor.WriteBack(data, pos);
           for (int i = target_block_ind + 1; i < father.block_size; ++i) {
             father.r_min[i - 1] = father.r_min[i];
