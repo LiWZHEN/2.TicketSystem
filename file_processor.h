@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-constexpr long FILE_UNIT_SIZE = 65536;
+constexpr long FILE_UNIT_SIZE = 4096;
 
 template <typename Block>
 class file_processor {
