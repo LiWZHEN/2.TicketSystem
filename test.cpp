@@ -3,8 +3,8 @@
 #include "fixed_str.h"
 
 int main() {
-  std::string str("A123B_kaj_");
-  fixed_str<1, 20, allow_underline,underline_group_num> fixed1(str);
+  std::string str("这个");
+  fixed_Chinese<1, 5> fixed1(str);
 
   if (fixed1.is_valid()) {
     std::cout << "valid\n";
@@ -20,8 +20,8 @@ int main() {
 
   std::cout << fixed1[0] << std::endl;
 
-  fixed_str fixed2(fixed1);
-  fixed1 = "change1";
+  fixed_Chinese fixed2(fixed1);
+  fixed1 = "中途变化";
   if (fixed1.is_valid()) {
     std::cout << "valid\n";
   } else {
