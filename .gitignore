@@ -1,9 +1,4 @@
 Ticket-System-2024-main.zip
-TicketSystem/testcases
-TicketSystem/bonus.md
-TicketSystem/management_system.md
-TicketSystem/README.md
-TicketSystem/run-test
 .idea/
 cmake-build-debug
-test
+bpt/test
