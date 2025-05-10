@@ -4,11 +4,11 @@
 template <int min_len, int max_len, char *special_valid, int special_valid_len>
 struct fixed_str {
 private:
-  char str[max_len];
+  char str[max_len]{};
   int len = 0;
   bool valid = true;
 public:
-  fixed_str(const std::string &string) {
+  explicit fixed_str(const std::string &string) {
     if (string.length() < min_len || string.length() > max_len) { // the length is invalid
       valid = false;
     } else { // the length is valid
@@ -23,7 +23,7 @@ public:
           }
           valid = false;
           for (int j = 0; j < special_valid_len; ++j) {
-            if (str[i] == *(special_valid + i)) {
+            if (str[i] == *(special_valid + j)) {
               valid = true;
               break;
             }
@@ -54,6 +54,12 @@ public:
 
   char operator[](const int ind) const {
     return str[ind];
+  }
+
+  void print() const {
+    for (int i = 0; i < len; ++i) {
+      std::cout << str[i];
+    }
   }
 };
 
