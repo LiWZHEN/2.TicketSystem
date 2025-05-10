@@ -1,51 +1,26 @@
 #include <iostream>
-#include "fixed_str.h"
-
-char allow_underline[1] = {'_'};
-char allow_at_and_point[2] = {'@', '.'};
-char allow_visible[32] = {'!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/',':',';','<','=','>','?','@','[','\\',']','^','_','`','{','|','}','~'};
+#include "fixed_Chinese.h"
+// #include "fixed_str.h"
 
 int main() {
-  int n;
-  std::cin >> n;
-  std::string str = "An apple";
+  std::string str[5] = {"汉字串一", "这是站点名", "哇那这很好了", "浙江温州平阳", "上海闵行"};
 
-  for (int i = 0; i < n; ++i) {
-    fixed_str<3, 10, allow_underline, 1> underline(str);
-    fixed_str<3, 10, allow_at_and_point, 2> at_and_point(str);
-    fixed_str<3, 10, allow_visible, 32> visible(str);
+  for (int i = 0; i < 5; ++i) {
+    fixed_Chinese<1, 5> Chinese(str[i]);
 
-    if (underline.is_valid()) {
-      std::cout << "Underline valid.\n";
+    if (Chinese.is_valid()) {
+      std::cout << "Chinese valid\n";
     } else {
-      std::cout << "Underline invalid.\n";
-    }
-    if (at_and_point.is_valid()) {
-      std::cout << "At and point valid.\n";
-    } else {
-      std::cout << "At and point invalid.\n";
-    }
-    if (visible.is_valid()) {
-      std::cout << "Visible valid.\n";
-    } else {
-      std::cout << "Visible invalid.\n";
+      std::cout << "Chinese invalid\n";
     }
 
-    std::cout << "Length: " << underline.length() << " " << at_and_point.length() << " " << visible.length() << '\n';
+    std::cout << "Length: " << Chinese.length() << '\n';
 
     std::cout << "Print test ...\n";
-    underline.print();
-    std::cout << '\n';
-    at_and_point.print();
-    std::cout << '\n';
-    visible.print();
-    std::cout << '\n';
+    Chinese.print();
+    std::cout << std::endl;
 
-    std::cout << underline[0];
-    std::cout << at_and_point[1];
-    std::cout << visible[visible.length() - 1] << '\n';
-
-    std::cin >> str;
+    std::cout << Chinese[0] << std::endl;
   }
   return 0;
 }
