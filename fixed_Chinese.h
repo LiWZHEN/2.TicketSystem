@@ -51,6 +51,7 @@ private:
   int len = 0;
   bool valid = true;
 public:
+  fixed_Chinese() = default;
   explicit fixed_Chinese(const std::string &string) {
     len = static_cast<int>(string.length() / 3);
     if (len < min_len || len > max_len) { // the length is invalid
@@ -61,6 +62,30 @@ public:
       }
     }
   }
+
+  fixed_Chinese &operator=(const std::string &string) {
+    len = static_cast<int>(string.length() / 3);
+    if (len < min_len || len > max_len) { // the length is invalid
+      valid = false;
+    } else { // the length is valid
+      for (int i = 0; i < len; ++i) {
+        str[i] = Three_Bytes_to_Char32(string[3 * i], string[3 * i + 1], string[3 * i + 2]);
+      }
+    }
+    return *this;
+  }
+  fixed_Chinese &operator=(const fixed_Chinese &other) {
+    if (this == &other) {
+      return *this;
+    }
+    len = other.len;
+    valid = other.valid;
+    for (int i = 0; i < max_len; ++i) {
+      str[i] = other.str[i];
+    }
+    return *this;
+  }
+
   [[nodiscard]] int length() const {
     return len;
   }
