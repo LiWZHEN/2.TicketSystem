@@ -103,6 +103,18 @@ public:
     return *this;
   }
 
+  bool operator==(const fixed_str &other) const {
+    if (len != other.len || !valid || !other.valid) {
+      return false;
+    }
+    for (int i = 0; i < len; ++i) {
+      if (str[i] != other.str[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   [[nodiscard]] int length() const {
     return len;
   }
@@ -119,6 +131,14 @@ public:
     for (int i = 0; i < len; ++i) {
       std::cout << str[i];
     }
+  }
+
+  std::string ToString() {
+    std::string string;
+    for (int i = 0; i < len; ++i) {
+      string.push_back(str[i]);
+    }
+    return string;
   }
 };
 

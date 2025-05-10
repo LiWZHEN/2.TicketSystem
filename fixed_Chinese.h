@@ -86,6 +86,18 @@ public:
     return *this;
   }
 
+  bool operator==(const fixed_Chinese &other) const {
+    if (len != other.len || !valid || !other.valid) {
+      return false;
+    }
+    for (int i = 0; i < len * 3; ++i) {
+      if (str[i] != other.str[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   [[nodiscard]] int length() const {
     return len;
   }
@@ -102,6 +114,14 @@ public:
     for (int i = 0; i < len; ++i) {
       std::cout << To_UTF_8(str[i]);
     }
+  }
+
+  std::string ToString() {
+    std::string string;
+    for (int i = 0; i < len; ++i) {
+      string.push_back((*this)[i]);
+    }
+    return string;
   }
 };
 
