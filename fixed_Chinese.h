@@ -51,7 +51,22 @@ private:
   int len = 0;
   bool valid = true;
 public:
-  fixed_Chinese() = default;
+  fixed_Chinese() {
+    if (min_len > 0) {
+      valid = false;
+    } else {
+      valid = true;
+    }
+  }
+
+  fixed_Chinese(const fixed_Chinese &other) {
+    len = other.len;
+    valid = other.valid;
+    for (int i = 0; i < max_len; ++i) {
+      str[i] = other.str[i];
+    }
+  }
+
   explicit fixed_Chinese(const std::string &string) {
     len = static_cast<int>(string.length() / 3);
     if (len < min_len || len > max_len) { // the length is invalid
