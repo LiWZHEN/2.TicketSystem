@@ -44,24 +44,16 @@ inline char32_t Three_Bytes_to_Char32(const char b0, const char b1, const char b
   return cp;
 }
 
-template <int min_len, int max_len>
+template <int max_len>
 struct fixed_Chinese {
 private:
   char32_t str[max_len]{};
   int len = 0;
-  bool valid = true;
 public:
-  fixed_Chinese() {
-    if (min_len > 0) {
-      valid = false;
-    } else {
-      valid = true;
-    }
-  }
+  fixed_Chinese() = default;
 
   fixed_Chinese(const fixed_Chinese &other) {
     len = other.len;
-    valid = other.valid;
     for (int i = 0; i < max_len; ++i) {
       str[i] = other.str[i];
     }
@@ -69,23 +61,15 @@ public:
 
   explicit fixed_Chinese(const std::string &string) {
     len = static_cast<int>(string.length() / 3);
-    if (len < min_len || len > max_len) { // the length is invalid
-      valid = false;
-    } else { // the length is valid
-      for (int i = 0; i < len; ++i) {
-        str[i] = Three_Bytes_to_Char32(string[3 * i], string[3 * i + 1], string[3 * i + 2]);
-      }
+    for (int i = 0; i < len; ++i) {
+      str[i] = Three_Bytes_to_Char32(string[3 * i], string[3 * i + 1], string[3 * i + 2]);
     }
   }
 
   fixed_Chinese &operator=(const std::string &string) {
     len = static_cast<int>(string.length() / 3);
-    if (len < min_len || len > max_len) { // the length is invalid
-      valid = false;
-    } else { // the length is valid
-      for (int i = 0; i < len; ++i) {
-        str[i] = Three_Bytes_to_Char32(string[3 * i], string[3 * i + 1], string[3 * i + 2]);
-      }
+    for (int i = 0; i < len; ++i) {
+      str[i] = Three_Bytes_to_Char32(string[3 * i], string[3 * i + 1], string[3 * i + 2]);
     }
     return *this;
   }
@@ -94,7 +78,6 @@ public:
       return *this;
     }
     len = other.len;
-    valid = other.valid;
     for (int i = 0; i < max_len; ++i) {
       str[i] = other.str[i];
     }
@@ -102,7 +85,7 @@ public:
   }
 
   bool operator==(const fixed_Chinese &other) const {
-    if (len != other.len || !valid || !other.valid) {
+    if (len != other.len) {
       return false;
     }
     for (int i = 0; i < len * 3; ++i) {
@@ -115,10 +98,6 @@ public:
 
   [[nodiscard]] int length() const {
     return len;
-  }
-
-  [[nodiscard]] bool is_valid() const {
-    return valid;
   }
 
   std::string operator[](const int ind) const {
