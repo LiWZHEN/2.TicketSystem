@@ -1,55 +1,14 @@
 #include <iostream>
-#include "fixed_Chinese.h"
-#include "fixed_str.h"
+#include "time_format.h"
+
+void print(const Time::time &t) {
+  std::cout << t.month_day.month << '.' << t.month_day.day << ' ' << t.hour_min.hour << ':' << t.hour_min.minute << '\n';
+}
 
 int main() {
-  std::string str("这个");
-  fixed_Chinese<1, 5> fixed1(str);
-
-  if (fixed1.is_valid()) {
-    std::cout << "valid\n";
-  } else {
-    std::cout << "invalid\n";
-  }
-
-  std::cout << "Length: " << fixed1.length() << '\n';
-
-  std::cout << "Print test ...\n";
-  fixed1.print();
-  std::cout << std::endl;
-
-  std::cout << fixed1[0] << std::endl;
-
-  fixed_Chinese fixed2(fixed1);
-  fixed1 = "中途变化";
-  if (fixed1.is_valid()) {
-    std::cout << "valid\n";
-  } else {
-    std::cout << "invalid\n";
-  }
-
-  std::cout << "Length: " << fixed1.length() << '\n';
-
-  std::cout << "Print test ...\n";
-  fixed1.print();
-  std::cout << std::endl;
-
-  std::cout << fixed1[0] << std::endl;
-
-  fixed1 = fixed2;
-
-  if (fixed1.is_valid()) {
-    std::cout << "valid\n";
-  } else {
-    std::cout << "invalid\n";
-  }
-
-  std::cout << "Length: " << fixed1.length() << '\n';
-
-  std::cout << "Print test ...\n";
-  fixed1.print();
-  std::cout << std::endl;
-
-  std::cout << fixed1[0] << std::endl;
+  Time::time t(6, 1, 0, 10);
+  print(t);
+  t -= 90;
+  print(t);
   return 0;
 }
