@@ -8,13 +8,13 @@
 namespace sjtu {
   template <typename Value>
   class bpt {
-    const unsigned long P = 131;
-    const unsigned long Q = 107;
-    const unsigned long M = 1e9 + 7;
+    const unsigned long long P = 131;
+    const unsigned long long Q = 107;
+    const unsigned long long M = 1e9 + 7;
 
     struct hash_pair {
-      unsigned long hash1 = 0;
-      unsigned long hash2 = 0;
+      unsigned long long hash1 = 0;
+      unsigned long long hash2 = 0;
       bool operator==(const hash_pair &other) const {
         if (hash1 == other.hash1 && hash2 == other.hash2) {
           return true;
@@ -44,8 +44,8 @@ namespace sjtu {
       }
     };
     hash_pair db_hash(const std::string &str) {
-      unsigned long hash1 = 0;
-      unsigned long hash2 = 0;
+      unsigned long long hash1 = 0;
+      unsigned long long hash2 = 0;
       for (int i = 0; i < str.length(); ++i) {
         hash1 = (hash1 * P + str[i]) % M;
         hash2 = (hash2 * Q + str[i]) % M;
@@ -55,7 +55,7 @@ namespace sjtu {
 
     struct index_value {
       hash_pair index;
-      int value = 0;
+      Value value;
 
       bool operator==(const index_value &other) const {
         return index == other.index && value == other.value;
@@ -136,7 +136,7 @@ namespace sjtu {
       info_file.close();
     }
 
-    void Insert(const std::string &index, int value) {
+    void Insert(const std::string &index, const Value &value) {
       const index_value target = {db_hash(index), value};
       if (map_information.root == -1) {
         block first;
@@ -339,7 +339,7 @@ namespace sjtu {
       data_processor.WriteBack(data, pos);
     }
 
-    void Delete(const std::string &index, int value) {
+    void Delete(const std::string &index, const Value &value) {
       const index_value target = {db_hash(index), value};
       if (map_information.root == -1) {
         return;
