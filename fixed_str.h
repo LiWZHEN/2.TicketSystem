@@ -1,6 +1,8 @@
 #ifndef FIXED_STR_H
 #define FIXED_STR_H
 
+#include <iostream>
+
 template <int max_len>
 struct fixed_str {
 private:
