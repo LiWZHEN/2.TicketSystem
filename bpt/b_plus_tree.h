@@ -750,6 +750,10 @@ namespace sjtu {
       }
       return ans;
     }
+
+    long long Size() const {
+      return map_information.size;
+    }
   };
 }
 
