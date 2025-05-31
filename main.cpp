@@ -1,9 +1,9 @@
 #include <iostream>
-#include "src/include/length_fixed_string/fixed_str.h"
-#include "src/include/length_fixed_string/fixed_Chinese.h"
-#include "src/include/bpt/b_plus_tree.h"
-#include "src/include/stl/map.hpp"
-#include "src/include/user.h"
+#include "length_fixed_string/fixed_str.h"
+#include "length_fixed_string/fixed_Chinese.h"
+#include "bpt/b_plus_tree.h"
+#include "stl/map.hpp"
+#include "user.h"
 
 int main() {
   std::string command;
