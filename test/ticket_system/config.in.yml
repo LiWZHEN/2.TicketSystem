@@ -1,0 +1,93 @@
+basic_1:
+  time: 6
+  mem: 25
+  disk: 512
+  score: 7
+  range: [ 1, 1 ]
+
+basic_2:
+  time: 6
+  mem: 25
+  disk: 512
+  score: 7
+  range: [ 2, 2 ]
+
+basic_3:
+  time: 6
+  mem: 25
+  disk: 512
+  score: 7
+  range: [ 3, 7 ]
+
+basic_4:
+  time: 6
+  mem: 25
+  disk: 512
+  score: 7
+  range: [ 8, 12 ]
+
+basic_5:
+  time: 6
+  mem: 25
+  disk: 512
+  score: 7
+  range: [ 13, 22 ]
+
+basic_6:
+  time: 6
+  mem: 25
+  disk: 512
+  score: 7
+  range: [ 23, 32 ]
+
+basic_extra:
+  time: 20
+  mem: 25
+  disk: 512
+  score: 8
+  range: [ 33, 42 ]
+
+pressure_1_easy:
+  time: 80
+  mem: 25
+  disk: 512
+  score: 5
+  range: [ 43, 52 ]
+
+pressure_2_easy:
+  time: 80
+  mem: 25
+  disk: 512
+  score: 6
+  range: [ 53, 62 ]
+
+pressure_3_easy:
+  time: 80
+  mem: 25
+  disk: 1024
+  score: 6
+  range: [ 63, 72 ]
+
+pressure_1_hard:
+  time: 36
+  mem: 16
+  disk: 384
+  score: 4
+  range: [ 73, 82 ]
+  dep: pressure_1_easy
+
+pressure_2_hard:
+  time: 36
+  mem: 16
+  disk: 384
+  score: 4
+  range: [ 83, 92 ]
+  dep: pressure_2_easy
+
+pressure_3_hard:
+  time: 48
+  mem: 16
+  disk: 512
+  score: 5
+  range: [ 93, 102 ]
+  dep: pressure_3_easy

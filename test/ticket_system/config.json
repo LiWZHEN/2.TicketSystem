@@ -1,0 +1,1119 @@
+{
+  "Groups": [
+    {
+      "GroupID": 1,
+      "GroupName": "basic_1",
+      "GroupScore": 7,
+      "TestPoints": [
+        1
+      ]
+    },
+    {
+      "GroupID": 2,
+      "GroupName": "basic_2",
+      "GroupScore": 7,
+      "TestPoints": [
+        2
+      ]
+    },
+    {
+      "GroupID": 3,
+      "GroupName": "basic_3",
+      "GroupScore": 7,
+      "TestPoints": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "GroupID": 4,
+      "GroupName": "basic_4",
+      "GroupScore": 7,
+      "TestPoints": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "GroupID": 5,
+      "GroupName": "basic_5",
+      "GroupScore": 7,
+      "TestPoints": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "GroupID": 6,
+      "GroupName": "basic_6",
+      "GroupScore": 7,
+      "TestPoints": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "GroupID": 7,
+      "GroupName": "basic_extra",
+      "GroupScore": 8,
+      "TestPoints": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ]
+    },
+    {
+      "GroupID": 8,
+      "GroupName": "pressure_1_easy",
+      "GroupScore": 5,
+      "TestPoints": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ]
+    },
+    {
+      "GroupID": 9,
+      "GroupName": "pressure_2_easy",
+      "GroupScore": 6,
+      "TestPoints": [
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ]
+    },
+    {
+      "GroupID": 10,
+      "GroupName": "pressure_3_easy",
+      "GroupScore": 6,
+      "TestPoints": [
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72
+      ]
+    },
+    {
+      "GroupID": 11,
+      "GroupName": "pressure_1_hard",
+      "GroupScore": 4,
+      "TestPoints": [
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82
+      ]
+    },
+    {
+      "GroupID": 12,
+      "GroupName": "pressure_2_hard",
+      "GroupScore": 4,
+      "TestPoints": [
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92
+      ]
+    },
+    {
+      "GroupID": 13,
+      "GroupName": "pressure_3_hard",
+      "GroupScore": 5,
+      "TestPoints": [
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102
+      ]
+    }
+  ],
+  "Details": [
+    {
+      "ID": 1,
+      "Dependency": 0,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 2,
+      "Dependency": 0,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 3,
+      "Dependency": 0,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 4,
+      "Dependency": 3,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 5,
+      "Dependency": 4,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 6,
+      "Dependency": 5,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 7,
+      "Dependency": 6,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 8,
+      "Dependency": 0,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 9,
+      "Dependency": 8,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 10,
+      "Dependency": 9,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 11,
+      "Dependency": 10,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 12,
+      "Dependency": 11,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 13,
+      "Dependency": 0,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 14,
+      "Dependency": 13,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 15,
+      "Dependency": 14,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 16,
+      "Dependency": 15,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 17,
+      "Dependency": 16,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 18,
+      "Dependency": 17,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 19,
+      "Dependency": 18,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 20,
+      "Dependency": 19,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 21,
+      "Dependency": 20,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 22,
+      "Dependency": 21,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 23,
+      "Dependency": 0,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 24,
+      "Dependency": 23,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 25,
+      "Dependency": 24,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 26,
+      "Dependency": 25,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 27,
+      "Dependency": 26,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 28,
+      "Dependency": 27,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 29,
+      "Dependency": 28,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 30,
+      "Dependency": 29,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 31,
+      "Dependency": 30,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 32,
+      "Dependency": 31,
+      "TimeLimit": 6000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 33,
+      "Dependency": 0,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 34,
+      "Dependency": 33,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 35,
+      "Dependency": 34,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 36,
+      "Dependency": 35,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 37,
+      "Dependency": 36,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 38,
+      "Dependency": 37,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 39,
+      "Dependency": 38,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 40,
+      "Dependency": 39,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 41,
+      "Dependency": 40,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 42,
+      "Dependency": 41,
+      "TimeLimit": 20000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 43,
+      "Dependency": 0,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 44,
+      "Dependency": 43,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 45,
+      "Dependency": 44,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 46,
+      "Dependency": 45,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 47,
+      "Dependency": 46,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 48,
+      "Dependency": 47,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 49,
+      "Dependency": 48,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 50,
+      "Dependency": 49,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 51,
+      "Dependency": 50,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 52,
+      "Dependency": 51,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 53,
+      "Dependency": 0,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 54,
+      "Dependency": 53,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 55,
+      "Dependency": 54,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 56,
+      "Dependency": 55,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 57,
+      "Dependency": 56,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 58,
+      "Dependency": 57,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 59,
+      "Dependency": 58,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 60,
+      "Dependency": 59,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 61,
+      "Dependency": 60,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 62,
+      "Dependency": 61,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 63,
+      "Dependency": 0,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": -1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 64,
+      "Dependency": 63,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 65,
+      "Dependency": 64,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 66,
+      "Dependency": 65,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 67,
+      "Dependency": 66,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 68,
+      "Dependency": 67,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 69,
+      "Dependency": 68,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 70,
+      "Dependency": 69,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 71,
+      "Dependency": 70,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 72,
+      "Dependency": 71,
+      "TimeLimit": 80000,
+      "MemoryLimit": 26214400,
+      "DiskLimit": 1073741824,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 73,
+      "Dependency": 52,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": -402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 74,
+      "Dependency": 73,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 75,
+      "Dependency": 74,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 76,
+      "Dependency": 75,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 77,
+      "Dependency": 76,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 78,
+      "Dependency": 77,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 79,
+      "Dependency": 78,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 80,
+      "Dependency": 79,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 81,
+      "Dependency": 80,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 82,
+      "Dependency": 81,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 83,
+      "Dependency": 62,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": -402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 84,
+      "Dependency": 83,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 85,
+      "Dependency": 84,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 86,
+      "Dependency": 85,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 87,
+      "Dependency": 86,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 88,
+      "Dependency": 87,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 89,
+      "Dependency": 88,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 90,
+      "Dependency": 89,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 91,
+      "Dependency": 90,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 92,
+      "Dependency": 91,
+      "TimeLimit": 36000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 402653184,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 93,
+      "Dependency": 72,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": -536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 94,
+      "Dependency": 93,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 95,
+      "Dependency": 94,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 96,
+      "Dependency": 95,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 97,
+      "Dependency": 96,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 98,
+      "Dependency": 97,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 99,
+      "Dependency": 98,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 100,
+      "Dependency": 99,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 101,
+      "Dependency": 100,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    },
+    {
+      "ID": 102,
+      "Dependency": 101,
+      "TimeLimit": 48000,
+      "MemoryLimit": 16777216,
+      "DiskLimit": 536870912,
+      "FileNumberLimit": 50,
+      "ValgrindTestOn": false
+    }
+  ],
+  "CompileTimeLimit": 180000,
+  "SPJ": 0
+}
