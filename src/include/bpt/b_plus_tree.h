@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include "file_processor.h"
-#include "vector.hpp"
+#include "src/include/stl/vector.hpp"
 
 namespace sjtu {
   template <typename Value>

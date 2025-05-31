@@ -1,8 +1,8 @@
 #ifndef USER_H
 #define USER_H
 
-#include "fixed_str.h"
-#include "fixed_Chinese.h"
+#include "src/include/length_fixed_string/fixed_str.h"
+#include "src/include/length_fixed_string/fixed_Chinese.h"
 
 namespace user {
   struct user_info {
