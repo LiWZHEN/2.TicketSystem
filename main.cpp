@@ -147,10 +147,11 @@ int main() {
         std::cout << "[" << time_stamp << "] -1\n";
       } else {
         auto iter = logged.find(fixed_str<20>(username));
-        if (iter != logged.end()) {
+        if (iter != logged.end()) { // already logged in
           std::cout << "[" << time_stamp << "] -1\n";
         } else {
-          logged.insert({username, iter->second});
+          sjtu::pair<const fixed_str<20>, user::user_info> pr(username, find_info[0]);
+          logged.insert(pr);
           std::cout << "[" << time_stamp << "] 0\n";
         }
       }
