@@ -74,10 +74,8 @@ int main() {
           new_user.password = password;
         } else if (command[it] == 'n') {
           ++it;
-          while (it < l && command[it] <= ' ') {
-            ++it;
-          }
-          while (it < l && command[it] > ' ') {
+          ++it;
+          while (it < l && command[it] != ' ') {
             name += command[it++];
           }
           new_user.name = name;
@@ -152,7 +150,7 @@ int main() {
         if (iter != logged.end()) {
           std::cout << "[" << time_stamp << "] -1\n";
         } else {
-          logged.insert({fixed_str<20>(username), iter->second});
+          logged.insert({username, iter->second});
           std::cout << "[" << time_stamp << "] 0\n";
         }
       }
@@ -256,10 +254,8 @@ int main() {
         } else if (command[it] == 'n') {
           n = true;
           ++it;
-          while (it < l && command[it] <= ' ') {
-            ++it;
-          }
-          while (it < l && command[it] > ' ') {
+          ++it;
+          while (it < l && command[it] != ' ') {
             name += command[it++];
           }
         } else if (command[it] == 'm') {
