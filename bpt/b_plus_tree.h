@@ -754,6 +754,11 @@ namespace sjtu {
     long long Size() const {
       return map_information.size;
     }
+
+    void Clean() {
+      map_information.size = 0;
+      map_information.root = -1, map_information.head = -1;
+    }
   };
 }
 
