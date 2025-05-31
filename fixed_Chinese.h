@@ -110,6 +110,13 @@ public:
     }
   }
 
+  friend std::ostream &operator<<(std::ostream &output, const fixed_Chinese &f) {
+    for (int i = 0; i < f.len; ++i) {
+      output << To_UTF_8(f.str[i]);
+    }
+    return output;
+  }
+
   std::string ToString() {
     std::string string;
     for (int i = 0; i < len; ++i) {
