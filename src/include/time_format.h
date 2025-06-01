@@ -194,14 +194,9 @@ namespace Time {
     }
 
     friend int operator-(const time &t1, const time &t2) {
-      int minute1 = t1.hour_min.hour * 60 + t1.hour_min.minute, minute2 = t2.hour_min.hour * 60 + t2.hour_min.minute;
-      if (t1.month_day - t2.month_day < 0) {
-        return -((t2.month_day - t1.month_day) * 1440 + minute2 - minute1);
-      }
-      if (t1.month_day == t2.month_day) {
-        return minute1 - minute2;
-      }
-      return (t1.month_day - t2.month_day) * 1440 + minute1 - minute2;
+      const int minute1 = t1.hour_min.hour * 60 + t1.hour_min.minute, minute2 = t2.hour_min.hour * 60 + t2.hour_min.minute;
+      const int delta_date = t1.month_day - t2.month_day;
+      return delta_date * 1440 + minute1 - minute2;
     }
   };
 }
