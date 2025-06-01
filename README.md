@@ -7,33 +7,65 @@ The repository: <https://github.com/LiWZHEN/CMU15445.git>
 
 ## Part 1: B+ Tree
 
-### How to use
-
-- Include the header file:
-
-      # include "b_plus_tree.h"
-
-- Construction:
-
-      sjtu::bpt\<Value\> bpt_name("map_file_name.txt", "data_file_name.txt");
-
-- The functions:
+### The functions:
   - insert
-  
-        bpt_name.Insert(index, value);
-
   - delete
-
-        bpt_name.Delete(index, value);
-
   - find
-
-        const auto ans_vector = bpt_name.Find(index); // ans_vector keeps all the values of "index"
+  - size
+  - clean
 
 ### Inner structure
 
-- No LRU cache pool
-
-- The size of a page is 4096 bit
+  - No LRU cache pool
+  - The size of a page is 4096 bit
 
 ## Part 2: Ticket System
+
+### User-related
+
+#### functions
+  - add_user
+  - login
+  - logout
+  - query_profile
+  - modify_profile
+
+#### structure
+  - in the memory
+    - a map with key being username and value being user_info.
+  - files (of bpt)
+    - users_map_info.txt, users_data.txt
+
+### Train-related
+
+#### functions
+  - add_train
+  - delete_train
+  - release_train
+  - query_train
+  - query_ticket
+  - query_transfer
+
+#### structure
+  - files (of bpt)
+    - train_id_map_info.txt, train_id.txt: fixed_str<20> trainID -> int train_id.
+    - station.txt: fixed_Chinese<10> station -> int train_id.
+  - files
+    - train_info.txt: store all information of a train at targeted address.
+
+### Ticket-related
+
+#### functions
+  - buy_ticket
+  - query_order
+  - refund_ticket
+
+#### structure
+  - files (of bpt)
+    - waiting_map_info.txt, waiting.txt: fixed_str<20> trainID -> {time, require_num, username}.
+
+### Others
+
+#### functions
+  - clean
+  - exit
