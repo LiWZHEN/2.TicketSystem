@@ -53,6 +53,27 @@ namespace Time {
       day = other.day;
       return *this;
     }
+
+    friend int operator-(const date &d1, const date &d2) {
+      if (d1.month < d2.month) { // the answer is negative
+        int ans = day_num[d1.month] - d1.day;
+        for (int i = d1.month + 1; i < d2.month; ++i) {
+          ans += day_num[i];
+        }
+        ans += d2.day;
+        return -ans;
+      }
+      if (d1.month == d2.month) {
+        return d1.day - d2.day;
+      }
+      int ans = day_num[d2.month] - d2.day;
+      for (int i = d2.month + 1; i < d1.month; ++i) {
+        ans += day_num[i];
+      }
+      ans += d1.day;
+      return ans;
+    }
+
   };
 
   struct time {
