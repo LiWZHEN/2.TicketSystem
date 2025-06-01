@@ -54,6 +54,10 @@ namespace Time {
       return *this;
     }
 
+    bool operator==(const date &other) const {
+      return month == other.month && day == other.day;
+    }
+
     friend int operator-(const date &d1, const date &d2) {
       if (d1.month < d2.month) { // the answer is negative
         int ans = day_num[d1.month] - d1.day;
@@ -187,6 +191,17 @@ namespace Time {
         month_day.month = (month_day.month + 10) % 12 + 1;
         month_day.day += day_num[month_day.month];
       }
+    }
+
+    friend int operator-(const time &t1, const time &t2) {
+      int minute1 = t1.hour_min.hour * 60 + t1.hour_min.minute, minute2 = t2.hour_min.hour * 60 + t2.hour_min.minute;
+      if (t1.month_day - t2.month_day < 0) {
+        return -((t2.month_day - t1.month_day) * 1440 + minute2 - minute1);
+      }
+      if (t1.month_day == t2.month_day) {
+        return minute1 - minute2;
+      }
+      return (t1.month_day - t2.month_day) * 1440 + minute1 - minute2;
     }
   };
 }
