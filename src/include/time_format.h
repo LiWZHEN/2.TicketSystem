@@ -28,6 +28,18 @@ namespace Time {
       minute = other.minute;
       return *this;
     }
+
+    friend std::ostream &operator<<(std::ostream &output, const clock &c) {
+      if (c.hour < 10) {
+        output << '0';
+      }
+      output << c.hour << ':';
+      if (c.minute < 10) {
+        output << '0';
+      }
+      output << c.minute;
+      return output;
+    }
   };
 
   struct date {
@@ -78,6 +90,17 @@ namespace Time {
       return ans;
     }
 
+    friend std::ostream &operator<<(std::ostream &output, const date &d) {
+      if (d.month < 10) {
+        output << '0';
+      }
+      output << d.month << '-';
+      if (d.day < 10) {
+        output << '0';
+      }
+      output << d.day;
+      return output;
+    }
   };
 
   struct time {
