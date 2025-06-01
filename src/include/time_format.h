@@ -221,6 +221,11 @@ namespace Time {
       const int delta_date = t1.month_day - t2.month_day;
       return delta_date * 1440 + minute1 - minute2;
     }
+
+    friend std::ostream &operator<<(std::ostream &output, const time &t) {
+      output << t.month_day << ' ' << t.hour_min;
+      return output;
+    }
   };
 }
 
