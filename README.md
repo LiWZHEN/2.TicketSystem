@@ -33,7 +33,7 @@ The repository: <https://github.com/LiWZHEN/CMU15445.git>
 #### structure
   - in the memory
     - a map with key being username and value being user_info.
-  - files (of bpt)
+  - file (of bpt)
     - users_map_info.txt, users_data.txt
 
 ### Train-related
@@ -47,10 +47,10 @@ The repository: <https://github.com/LiWZHEN/CMU15445.git>
   - query_transfer
 
 #### structure
-  - files (of bpt)
+  - file (of bpt)
     - train_id_map_info.txt, train_id.txt: fixed_str<20> trainID -> int train_id.
-    - station.txt: fixed_Chinese<10> station -> int train_id.
-  - files
+    - station_map_info.txt, station.txt: fixed_Chinese<10> station -> int train_id.
+  - file
     - train_info.txt: store all information of a train at targeted address.
 
 ### Ticket-related
@@ -61,7 +61,7 @@ The repository: <https://github.com/LiWZHEN/CMU15445.git>
   - refund_ticket
 
 #### structure
-  - files (of bpt)
+  - file (of bpt)
     - waiting_map_info.txt, waiting.txt: fixed_str<20> trainID -> {time, require_num, username}.
 
 ### Others
