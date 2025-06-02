@@ -82,10 +82,7 @@ namespace train {
       if (t1.time < t2.time) {
         return false;
       }
-      if (t1.trainID > t2.trainID) {
-        return true;
-      }
-      return false;
+      return t1.trainID > t2.trainID;
     }
   };
 
@@ -98,10 +95,7 @@ namespace train {
       if (t1.cost < t2.cost) {
         return false;
       }
-      if (t1.trainID > t2.trainID) {
-        return true;
-      }
-      return false;
+      return t1.trainID > t2.trainID;
     }
   };
 
