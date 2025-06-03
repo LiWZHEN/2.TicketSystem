@@ -120,7 +120,7 @@ public:
   [[nodiscard]] std::string ToString() const {
     std::string string;
     for (int i = 0; i < len; ++i) {
-      string.push_back((*this)[i]);
+      string += (*this)[i];
     }
     return string;
   }
