@@ -70,6 +70,24 @@ namespace Time {
       return month == other.month && day == other.day;
     }
 
+    date operator+(const int d) const {
+      date ans(month, day + d);
+      while (ans.day > day_num[ans.month]) {
+        ans.day -= day_num[ans.month];
+        ++ans.month;
+      }
+      return ans;
+    }
+
+    date &operator+=(const int d) {
+      day += d;
+      while (day > day_num[month]) {
+        day -= day_num[month];
+        ++month;
+      }
+      return *this;
+    }
+
     friend int operator-(const date &d1, const date &d2) {
       if (d1.month < d2.month) { // the answer is negative
         int ans = day_num[d1.month] - d1.day;
