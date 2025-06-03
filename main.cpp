@@ -12,12 +12,13 @@
 
 int main() {
   std::string command;
-  sjtu::map<fixed_str<20>, user::user_info> logged;
+  sjtu::map<std::string, user::user_info> logged;
   sjtu::bpt<user::user_info> users("users_map_info.txt", "users_data.txt");
   file_processor<train::train_info> train_information("train_info.txt");
   sjtu::bpt<int> train_info_pos("train_id_map_info.txt", "train_id.txt");
   sjtu::bpt<train::train_station_ind> station("station_map_info.txt", "station.txt");
-  sjtu::bpt<>
+  sjtu::bpt<ticket::record> recording("recording_map_info.txt", "recording.txt");
+  sjtu::bpt<ticket::waiting> waiting("waiting_map_info.txt", "waiting.txt");
   while (true) {
     if (!std::getline(std::cin, command)) {
       logged.clear();
@@ -115,7 +116,7 @@ int main() {
       } else if (!users.Find(username).empty()) {
         std::cout << '[' << time_stamp << "] -1\n";
       } else {
-        auto iter = logged.find(fixed_str<20>(cur_username));
+        auto iter = logged.find(cur_username);
         if (iter == logged.end() || iter->second.privilege <= privilege) {
           std::cout << '[' << time_stamp << "] -1\n";
         } else {
@@ -155,7 +156,7 @@ int main() {
       if (find_info.empty() || find_info[0].password.ToString() != password) {
         std::cout << '[' << time_stamp << "] -1\n";
       } else {
-        auto iter = logged.find(fixed_str<20>(username));
+        auto iter = logged.find(username);
         if (iter != logged.end()) { // already logged in
           std::cout << '[' << time_stamp << "] -1\n";
         } else {
@@ -182,7 +183,7 @@ int main() {
           username += command[it++];
         }
       }
-      auto find_info = logged.find(fixed_str<20>(username));
+      auto find_info = logged.find(username);
       if (find_info == logged.end()) {
         std::cout << '[' << time_stamp << "] -1\n";
       } else {
@@ -217,7 +218,7 @@ int main() {
           }
         }
       }
-      auto find_info = logged.find(fixed_str<20>(cur_username));
+      auto find_info = logged.find(cur_username);
       auto find_target = users.Find(username);
       if (find_info == logged.end() || (find_info->second.privilege <= find_target[0].privilege && cur_username != username)) {
         std::cout << '[' << time_stamp << "] -1\n";
@@ -288,7 +289,7 @@ int main() {
           }
         }
       }
-      auto cur_user = logged.find(fixed_str<20>(cur_username));
+      auto cur_user = logged.find(cur_username);
       auto user_info = users.Find(username);
       if (cur_user == logged.end() || (cur_user->second.privilege <= user_info[0].privilege && cur_username != username) || cur_user->second.privilege <= privilege) {
         std::cout << '[' << time_stamp << "] -1\n";
@@ -595,6 +596,10 @@ int main() {
           if (pass_s[s_it].train_ind == pass_t[t_it].train_ind) {
             if (pass_s[s_it].station_ind < pass_t[t_it].station_ind) {
               auto info = train_information.ReadBlock(pass_s[s_it].train_ind);
+              if (!info.released) {
+                ++s_it, ++t_it;
+                continue;;
+              }
               Time::time leave_s(day, info.start_time), arrive_t(day, info.start_time);
               if (pass_s[s_it].station_ind != 0) {
                 leave_s += info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
@@ -641,6 +646,10 @@ int main() {
           if (pass_s[s_it].train_ind == pass_t[t_it].train_ind) {
             if (pass_s[s_it].station_ind < pass_t[t_it].station_ind) {
               auto info = train_information.ReadBlock(pass_s[s_it].train_ind);
+              if (!info.released) {
+                ++s_it, ++t_it;
+                continue;
+              }
               Time::time leave_s(day, info.start_time), arrive_t(day, info.start_time);
               if (pass_s[s_it].station_ind != 0) {
                 leave_s += info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
@@ -731,6 +740,9 @@ int main() {
       for (auto train_station : pass_s) {
         // the start station is the train_station.station_ind-th station of the train_station.train_ind-th of train
         auto info = train_information.ReadBlock(train_station.train_ind); // the train information
+        if (!info.released) {
+          continue;
+        }
         start = info.stations[train_station.station_ind].ToString();
         for (int i = train_station.station_ind + 1; i < info.stationNum; ++i) {
           // we hope to get the needed time to go from start to info.stations[i]
@@ -990,11 +1002,239 @@ int main() {
           }
         }
       }
-
+      auto target_pos = train_info_pos.Find(trainID);
+      if (target_pos.empty()) {
+        std::cout << '[' << time_stamp << "] -1\n"; // no such train
+        continue;
+      }
+      auto info = train_information.ReadBlock(target_pos[0]);
+      if (!info.released) {
+        std::cout << '[' << time_stamp << "] -1\n"; // train hasn't been released
+        continue;
+      }
+      int ind_s, ind_t;
+      bool find_s = false, find_t = false;
+      for (int i = 0; i < info.stationNum; ++i) {
+        if (info.stations[i].ToString() == from) {
+          ind_s = i;
+          find_s = true;
+          continue;
+        }
+        if (info.stations[i].ToString() == to) {
+          ind_t = i;
+          find_t = true;
+          break;
+        }
+      }
+      if (!find_s || !find_t) {
+        std::cout << '[' << time_stamp << "] -1\n"; // stations are not valid
+        continue;
+      }
+      int t_gap;
+      if (ind_s == 0) {
+        t_gap = 0;
+      } else {
+        t_gap = info.travel_times[ind_s - 1] + info.stopover_times[ind_s - 1];
+      }
+      Time::time earliest(info.sale_begin, info.start_time), latest(info.sale_end, info.start_time);
+      earliest += t_gap, latest += t_gap;
+      if (earliest.month_day - day > 0 || latest.month_day - day < 0) {
+        std::cout << '[' << time_stamp << "] -1\n"; // out of the range of sale
+        continue;
+      }
+      int day_ind = day - Time::date(6, 1);
+      int max_ticket = 2147483647;
+      for (int i = ind_s; i < ind_t; ++i) {
+        if (info.seat_remain[day_ind][i] < max_ticket) {
+          max_ticket = info.seat_remain[day_ind][i];
+        }
+      }
+      if (max_ticket >= num) {
+        for (int i = ind_s; i < ind_t; ++i) {
+          info.seat_remain[day_ind][i] -= num;
+        }
+        train_information.WriteBack(info, target_pos[0]);
+        int t_travel;
+        if (ind_s == 0) {
+          if (ind_t == 1) {
+            t_travel = info.travel_times[0];
+          } else {
+            t_travel = info.travel_times[ind_t - 1] + info.stopover_times[ind_t - 2];
+          }
+        } else {
+          if (ind_t == ind_s + 1) {
+            t_travel = info.travel_times[ind_s] - info.travel_times[ind_s - 1];
+          } else {
+            t_travel = info.travel_times[ind_t - 1] - info.travel_times[ind_s - 1] + info.stopover_times[ind_t - 2] - info.stopover_times[ind_s - 1];
+          }
+        }
+        int price;
+        if (ind_s == 0) {
+          price = info.cumulative_prices[ind_t - 1];
+        } else {
+          price = info.cumulative_prices[ind_t - 1] - info.cumulative_prices[ind_s - 1];
+        }
+        Time::time leaving_time(day, earliest.hour_min);
+        recording.Insert(username, {fixed_str<20>(username), time_stamp, info.trainID,
+          fixed_Chinese<10>(from), fixed_Chinese<10>(to), leaving_time,
+          leaving_time + t_travel, price, num, 0, ind_s, ind_t});
+      } else {
+        if (!queue) {
+          std::cout << '[' << time_stamp << "] -1\n"; // do not have sufficient tickets
+          continue;
+        }
+        int t_travel;
+        if (ind_s == 0) {
+          if (ind_t == 1) {
+            t_travel = info.travel_times[0];
+          } else {
+            t_travel = info.travel_times[ind_t - 1] + info.stopover_times[ind_t - 2];
+          }
+        } else {
+          if (ind_t == ind_s + 1) {
+            t_travel = info.travel_times[ind_s] - info.travel_times[ind_s - 1];
+          } else {
+            t_travel = info.travel_times[ind_t - 1] - info.travel_times[ind_s - 1] + info.stopover_times[ind_t - 2] - info.stopover_times[ind_s - 1];
+          }
+        }
+        int price;
+        if (ind_s == 0) {
+          price = info.cumulative_prices[ind_t - 1];
+        } else {
+          price = info.cumulative_prices[ind_t - 1] - info.cumulative_prices[ind_s - 1];
+        }
+        Time::time leaving_time(day, earliest.hour_min);
+        recording.Insert(username, {fixed_str<20>(username), time_stamp, info.trainID,
+          fixed_Chinese<10>(from), fixed_Chinese<10>(to), leaving_time,
+          leaving_time + t_travel, price, num, 1, ind_s, ind_t});
+        waiting.Insert(trainID, {time_stamp, fixed_str<20>(username), info.trainID,
+          ind_s, ind_t, day, num});
+      }
     } else if (cmd == "query_order") {
-
+      it += 4;
+      std::string username;
+      while (it < l) {
+        username += command[it++];
+      }
+      auto check = logged.find(username);
+      if (check == logged.end()) {
+        std::cout << '[' << time_stamp << "] -1\n";
+        continue;
+      }
+      auto target = recording.Find(username);
+      std::cout << '[' << time_stamp << "] " << target.size() << '\n';
+      for (int i = static_cast<int>(target.size()) - 1; i >= 0; --i) {
+        std::cout << target[i] << '\n';
+      }
     } else if (cmd == "refund_ticket") {
-
+      std::string username;
+      int n = 1;
+      while (true) {
+        while (it < l && command[it] <= ' ') {
+          ++it;
+        }
+        if (it == l) {
+          break;
+        }
+        ++it;
+        if (command[it] == 'u') {
+          it += 2;
+          while (it < l && command[it] > ' ') {
+            username += command[it++];
+          }
+        } else if (command[it] == 'n') {
+          n = 0;
+          it += 2;
+          while (it < l && command[it] > ' ') {
+            n = n * 10 + (command[it++] - '0');
+          }
+        }
+      }
+      auto check = logged.find(username);
+      if (check == logged.end()) {
+        std::cout << '[' << time_stamp << "] -1\n";
+        continue;
+      }
+      auto target = recording.Find(username);
+      if (target.size() < n) {
+        std::cout << '[' << time_stamp << "] -1\n";
+        continue;
+      }
+      auto to_be_refunded = target[target.size() - n];
+      if (to_be_refunded.status != 0) {
+        std::cout << '[' << time_stamp << "] -1\n";
+        continue;
+      }
+      std::string trainID = to_be_refunded.trainID.ToString();
+      auto train_info_ind = train_info_pos.Find(trainID);
+      auto info = train_information.ReadBlock(train_info_ind[0]);
+      Time::time ti = to_be_refunded.leaving;
+      for (int i = to_be_refunded.ind_s; i < to_be_refunded.ind_t; ++i) {
+        info.seat_remain[ti.month_day - Time::date(6, 1)][i] += to_be_refunded.num;
+        if (i == 0) {
+          ti += info.travel_times[0] + info.stopover_times[0];
+        } else {
+          ti += info.travel_times[i] + info.stopover_times[i] - info.travel_times[i - 1] - info.stopover_times[i - 1];
+        }
+      }
+      recording.Delete(username, to_be_refunded);
+      to_be_refunded.status = 2;
+      recording.Insert(username, to_be_refunded);
+      auto waiting_list = waiting.Find(trainID);
+      for (const auto &request : waiting_list) {
+        int travel_t;
+        if (request.ind_start == 0) {
+          travel_t = info.travel_times[request.ind_destination - 1] + info.stopover_times[request.ind_destination - 1];
+        } else {
+          travel_t = info.travel_times[request.ind_destination - 1] + info.stopover_times[request.ind_destination - 1]
+              - info.travel_times[request.ind_start - 1] - info.stopover_times[request.ind_start - 1];
+        }
+        Time::time depart(info.sale_begin, info.start_time);
+        Time::time depart_needed = depart + travel_t;
+        const int delta_date = request.date - depart_needed.month_day;
+        depart.month_day += delta_date;
+        if (request.ind_start > 0) {
+          depart += info.travel_times[request.ind_start - 1] + info.stopover_times[request.ind_start - 1];
+        }
+        ti = depart; // the departure time at ind_start
+        bool satisfiable = true;
+        for (int i = request.ind_start; i < request.ind_destination; ++i) {
+          if (info.seat_remain[depart.month_day - Time::date(6, 1)][i] < request.require_seats) {
+            satisfiable = false;
+            break;
+          }
+          if (i == 0) {
+            depart += info.travel_times[0] + info.stopover_times[0];
+          } else {
+            depart += info.travel_times[i] + info.stopover_times[i] - info.travel_times[i - 1] - info.stopover_times[i - 1];
+          }
+        }
+        if (!satisfiable) {
+          continue;
+        }
+        for (int i = request.ind_start; i < request.ind_destination; ++i) {
+          info.seat_remain[ti.month_day - Time::date(6, 1)][i] -= request.require_seats;
+          if (i == 0) {
+            ti += info.travel_times[0] + info.stopover_times[0];
+          } else {
+            ti += info.travel_times[i] + info.stopover_times[i] - info.travel_times[i - 1] - info.stopover_times[i - 1];
+          }
+        }
+        waiting.Delete(trainID, request);
+        std::string user_name = request.username.ToString();
+        auto find_record = recording.Find(user_name);
+        ticket::record target_record;
+        for (const auto &iterator : find_record) {
+          if (iterator.query_time_stamp == request.query_time_stamp) {
+            target_record = iterator;
+            break;
+          }
+        }
+        recording.Delete(user_name, target_record);
+        target_record.status = 0;
+        recording.Insert(user_name, target_record);
+      }
+      train_information.WriteBack(info, train_info_ind[0]);
     } else if (cmd == "clean") {
       logged.clear();
       users.Clean();
