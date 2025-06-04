@@ -219,7 +219,7 @@ int main() {
       }
       auto find_info = logged.find(cur_username);
       auto find_target = users.Find(username);
-      if (find_info == logged.end() || (find_info->second.privilege <= find_target[0].privilege && cur_username != username)) {
+      if (find_info == logged.end() || find_target.empty() || (find_info->second.privilege <= find_target[0].privilege && cur_username != username)) {
         std::cout << '[' << time_stamp << "] -1\n";
       } else {
         std::cout << '[' << time_stamp << "] " << username << ' ' << find_target[0].name << ' ' << find_target[0].mailAddr << ' ' << find_target[0].privilege << '\n';
@@ -290,7 +290,7 @@ int main() {
       }
       auto cur_user = logged.find(cur_username);
       auto user_info = users.Find(username);
-      if (cur_user == logged.end() || (cur_user->second.privilege <= user_info[0].privilege && cur_username != username) || cur_user->second.privilege <= privilege) {
+      if (cur_user == logged.end() || user_info.empty() || (cur_user->second.privilege <= user_info[0].privilege && cur_username != username) || cur_user->second.privilege <= privilege) {
         std::cout << '[' << time_stamp << "] -1\n";
       } else {
         auto target = user_info[0];
