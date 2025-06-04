@@ -1065,6 +1065,11 @@ int main() {
           }
         }
       }
+      auto target_user = logged.find(username);
+      if (target_user == logged.end()) {
+        std::cout << '[' << time_stamp << "] -1\n"; // user not online
+        continue;
+      }
       auto target_pos = train_info_pos.Find(trainID);
       if (target_pos.empty()) {
         std::cout << '[' << time_stamp << "] -1\n"; // no such train
