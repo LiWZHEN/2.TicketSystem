@@ -537,25 +537,29 @@ int main() {
       auto target = train_info_pos.Find(trainID);
       if (target.empty()) {
         std::cout << '[' << time_stamp << "] -1\n";
+        continue;
+      }
+      int ind = target[0];
+      auto info = train_information.ReadBlock(ind);
+      if (info.sale_begin - day > 0 || info.sale_end - day < 0) {
+        std::cout << '[' << time_stamp << "] -1\n";
+        continue;
+      }
+      std::cout << '[' << time_stamp << "] " << trainID << ' ' << info.type << '\n';
+      Time::time t(day, info.start_time);
+      std::cout << info.stations[0] << " xx-xx xx:xx -> " << t << " 0 " << info.seat_remain[day - Time::date(6, 1)][0] << '\n';
+      if (info.stationNum == 2) {
+        auto arrival = t + info.travel_times[0];
+        std::cout << info.stations[1] << ' ' << arrival << " -> xx-xx xx:xx " << info.cumulative_prices[0] << " x\n";
       } else {
-        int ind = target[0];
-        auto info = train_information.ReadBlock(ind);
-        std::cout << '[' << time_stamp << "] " << trainID << ' ' << info.type << '\n';
-        Time::time t(day, info.start_time);
-        std::cout << info.stations[0] << " xx-xx xx:xx -> " << t << " 0 " << info.seat_remain[day - Time::date(6, 1)][0] << '\n';
-        if (info.stationNum == 2) {
-          auto arrival = t + info.travel_times[0];
-          std::cout << info.stations[1] << ' ' << arrival << " -> xx-xx xx:xx " << info.cumulative_prices[0] << " x\n";
-        } else {
-          auto not_halt = t + info.travel_times[0], halt = not_halt + info.stopover_times[0];
-          std::cout << info.stations[1] << ' ' << not_halt << " -> " << halt << ' ' << info.cumulative_prices[0] << ' ' << info.seat_remain[halt.month_day - Time::date(6, 1)][1] << '\n';
-          for (int i = 2; i < info.stationNum - 1; ++i) {
-            auto all_not_halt = t + info.travel_times[i - 1], arrival = all_not_halt + info.stopover_times[i - 2], departure = all_not_halt + info.stopover_times[i - 1];
-            std::cout << info.stations[i] << ' ' << arrival << " -> " << departure << ' ' << info.cumulative_prices[i - 1] << ' ' << info.seat_remain[departure.month_day - Time::date(6, 1)][i] << '\n';
-          }
-          auto arrival = t + info.travel_times[info.stationNum - 2] + info.stopover_times[info.stationNum - 3];
-          std::cout << info.stations[info.stationNum - 1] << ' ' << arrival << " -> xx-xx xx:xx " << info.cumulative_prices[info.stationNum - 2] << " x\n";
+        auto not_halt = t + info.travel_times[0], halt = not_halt + info.stopover_times[0];
+        std::cout << info.stations[1] << ' ' << not_halt << " -> " << halt << ' ' << info.cumulative_prices[0] << ' ' << info.seat_remain[halt.month_day - Time::date(6, 1)][1] << '\n';
+        for (int i = 2; i < info.stationNum - 1; ++i) {
+          auto all_not_halt = t + info.travel_times[i - 1], arrival = all_not_halt + info.stopover_times[i - 2], departure = all_not_halt + info.stopover_times[i - 1];
+          std::cout << info.stations[i] << ' ' << arrival << " -> " << departure << ' ' << info.cumulative_prices[i - 1] << ' ' << info.seat_remain[departure.month_day - Time::date(6, 1)][i] << '\n';
         }
+        auto arrival = t + info.travel_times[info.stationNum - 2] + info.stopover_times[info.stationNum - 3];
+        std::cout << info.stations[info.stationNum - 1] << ' ' << arrival << " -> xx-xx xx:xx " << info.cumulative_prices[info.stationNum - 2] << " x\n";
       }
     } else if (cmd == "query_ticket") {
       std::string start, destination;
@@ -610,6 +614,10 @@ int main() {
               if (!info.released) {
                 ++s_it, ++t_it;
                 continue;;
+              }
+              Time::time earliest(info.sale_begin, info.start_time), latest(info.sale_end, info.start_time);
+              if (earliest.month_day - day > 0 || latest.month_day - day < 0) {
+                continue;
               }
               Time::time leave_s(day, info.start_time), arrive_t(day, info.start_time);
               int travel_t;
