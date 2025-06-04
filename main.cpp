@@ -1253,6 +1253,30 @@ int main() {
         continue;
       }
       std::string trainID = to_be_refunded.trainID.ToString();
+      if (to_be_refunded.status == 1) {
+        auto waiting_list = waiting.Find(trainID);
+        ticket::waiting target_waiting_request;
+        for (const auto &request : waiting_list) {
+          if (request.query_time_stamp == to_be_refunded.query_time_stamp) {
+            target_waiting_request = request;
+            break;
+          }
+        }
+        waiting.Delete(trainID, target_waiting_request);
+        auto user_tickets = recording.Find(username);
+        ticket::record target_user_record;
+        for (const auto &user_record : user_tickets) {
+          if (user_record.query_time_stamp == to_be_refunded.query_time_stamp) {
+            target_user_record = user_record;
+            break;
+          }
+        }
+        recording.Delete(username, target_user_record);
+        target_user_record.status = 2;
+        recording.Insert(username, target_user_record);
+        std::cout << '[' << time_stamp << "] 0\n";
+        continue;
+      }
       auto train_info_ind = train_info_pos.Find(trainID);
       auto info = train_information.ReadBlock(train_info_ind[0]);
       Time::time leave_s = to_be_refunded.leaving;
