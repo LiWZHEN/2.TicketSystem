@@ -844,8 +844,11 @@ int main() {
             }
             Time::time earliest2(info.sale_begin, info.start_time), latest2(info.sale_end, info.start_time);
             earliest2 += to_s_leave, latest2 += to_s_leave;
-            if (earliest2 - leave_s > 0 || latest2 - leave_s < 0) {
+            if (latest2 - leave_s < 0) {
               continue;
+            }
+            if (earliest2 - leave_s > 0) {
+              leave_s = earliest2;
             }
             auto arrive_t = leave_s + travel_t, set_out = leave_s - to_s_leave;
             const int d_ind = set_out.month_day - Time::date(6, 1);
