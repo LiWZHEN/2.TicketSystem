@@ -458,9 +458,6 @@ int main() {
         }
         int ind = static_cast<int>(train_information.WriteBlock(new_train));
         train_info_pos.Insert(trainID, ind);
-        for (int i = 0; i < new_train.stationNum; ++i) {
-          station.Insert(new_train.stations[i].ToString(), {ind, i});
-        }
         std::cout << '[' << time_stamp << "] 0\n";
       } else {
         std::cout << '[' << time_stamp << "] -1\n";
@@ -481,9 +478,6 @@ int main() {
           std::cout << '[' << time_stamp << "] -1\n";
         } else {
           train_info_pos.Delete(trainID, ind);
-          for (int i = 0; i < info.stationNum; ++i) {
-            station.Delete(info.stations[i].ToString(), {ind, i});
-          }
           std::cout << '[' << time_stamp << "] 0\n";
         }
       }
@@ -504,6 +498,9 @@ int main() {
         } else {
           info.released = true;
           train_information.WriteBack(info, ind);
+          for (int i = 0; i < info.stationNum; ++i) {
+            station.Insert(info.stations[i].ToString(), {ind, i});
+          }
           std::cout << '[' << time_stamp << "] 0\n";
         }
       }
@@ -611,10 +608,6 @@ int main() {
           if (pass_s[s_it].train_ind == pass_t[t_it].train_ind) {
             if (pass_s[s_it].station_ind < pass_t[t_it].station_ind) {
               auto info = train_information.ReadBlock(pass_s[s_it].train_ind);
-              if (!info.released) {
-                ++s_it, ++t_it;
-                continue;
-              }
               int t_gap;
               if (pass_s[s_it].station_ind == 0) {
                 t_gap = 0;
@@ -680,10 +673,6 @@ int main() {
           if (pass_s[s_it].train_ind == pass_t[t_it].train_ind) {
             if (pass_s[s_it].station_ind < pass_t[t_it].station_ind) {
               auto info = train_information.ReadBlock(pass_s[s_it].train_ind);
-              if (!info.released) {
-                ++s_it, ++t_it;
-                continue;
-              }
               int t_gap;
               if (pass_s[s_it].station_ind == 0) {
                 t_gap = 0;
@@ -791,9 +780,6 @@ int main() {
       for (auto train_station : pass_s) {
         // the start station is the train_station.station_ind-th station of the train_station.train_ind-th of train
         auto info = train_information.ReadBlock(train_station.train_ind); // the train information
-        if (!info.released) {
-          continue;
-        }
         start = info.stations[train_station.station_ind].ToString();
         for (int i = train_station.station_ind + 1; i < info.stationNum; ++i) {
           // we hope to get the needed time to go from start to info.stations[i]
