@@ -1112,16 +1112,32 @@ int main() {
         std::cout << '[' << time_stamp << "] -1\n"; // out of the range of sale
         continue;
       }
-      int day_ind = day - Time::date(6, 1);
+      Time::time leave_i(day, info.start_time);
+      if (ind_s != 0) {
+        leave_i += info.travel_times[ind_s - 1] + info.stopover_times[ind_s - 1];
+      }
+      leave_i.month_day = day;
+      auto leave_ii = leave_i;
+      Time::date normal(6, 1);
       int max_ticket = 2147483647;
       for (int i = ind_s; i < ind_t; ++i) {
-        if (info.seat_remain[day_ind][i] < max_ticket) {
-          max_ticket = info.seat_remain[day_ind][i];
+        if (info.seat_remain[leave_i.month_day - normal][i] < max_ticket) {
+          max_ticket = info.seat_remain[leave_i.month_day - normal][i];
+        }
+        if (i > 0) {
+          leave_i = leave_i + (info.travel_times[i] - info.travel_times[i - 1]) + (info.stopover_times[i] - info.stopover_times[i - 1]);
+        } else {
+          leave_i = leave_i + info.travel_times[i] + info.stopover_times[i];
         }
       }
       if (max_ticket >= num) {
         for (int i = ind_s; i < ind_t; ++i) {
-          info.seat_remain[day_ind][i] -= num;
+          info.seat_remain[leave_ii.month_day - normal][i] -= num;
+          if (i > 0) {
+            leave_ii = leave_ii + (info.travel_times[i] - info.travel_times[i - 1]) + (info.stopover_times[i] - info.stopover_times[i - 1]);
+          } else {
+            leave_ii = leave_ii + info.travel_times[i] + info.stopover_times[i];
+          }
         }
         train_information.WriteBack(info, target_pos[0]);
         int t_travel;
