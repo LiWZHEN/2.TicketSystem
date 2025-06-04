@@ -776,22 +776,29 @@ int main() {
         // the start station is the train_station.station_ind-th station of the train_station.train_ind-th of train
         auto info = train_information.ReadBlock(train_station.train_ind); // the train information
         start = info.stations[train_station.station_ind].ToString();
+        Time::time leave_s(day, info.start_time);
+        int to_s_leave = 0;
+        if (train_station.station_ind != 0) {
+          to_s_leave = info.travel_times[train_station.station_ind - 1] + info.stopover_times[train_station.station_ind - 1];
+          leave_s += to_s_leave;
+        }
+        leave_s.month_day = day;
+        Time::time earliest(info.sale_begin, info.start_time), latest(info.sale_end, info.start_time);
+        earliest += to_s_leave, latest += to_s_leave;
+        if (earliest - leave_s > 0 || latest - leave_s < 0) {
+          continue;
+        }
         for (int i = train_station.station_ind + 1; i < info.stationNum; ++i) {
           // we hope to get the needed time to go from start to info.stations[i]
           destination = info.stations[i].ToString();
-          Time::time leave_s(day, info.start_time);
           int travel_t;
-          int to_s_leave = 0;
           if (train_station.station_ind != 0) {
-            to_s_leave = info.travel_times[train_station.station_ind - 1] + info.stopover_times[train_station.station_ind - 1];
-            leave_s += to_s_leave;
             travel_t = info.travel_times[i - 1] + info.stopover_times[i - 2] - info.travel_times[train_station.station_ind - 1] - info.stopover_times[train_station.station_ind - 1];
           } else if (i == 1) {
             travel_t = info.travel_times[0];
           } else {
             travel_t = info.travel_times[i - 1] + info.stopover_times[i - 2];
           }
-          leave_s.month_day = day;
           Time::time arrive_t = leave_s + travel_t, set_out = leave_s - to_s_leave;
           const int d_ind = set_out.month_day - Time::date(6, 1);
           int cost;
@@ -1241,7 +1248,7 @@ int main() {
         continue;
       }
       auto to_be_refunded = target[target.size() - n];
-      if (to_be_refunded.status != 0) {
+      if (to_be_refunded.status == 2) {
         std::cout << '[' << time_stamp << "] -1\n";
         continue;
       }
