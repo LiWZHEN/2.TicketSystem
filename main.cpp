@@ -613,10 +613,18 @@ int main() {
               auto info = train_information.ReadBlock(pass_s[s_it].train_ind);
               if (!info.released) {
                 ++s_it, ++t_it;
-                continue;;
+                continue;
+              }
+              int t_gap;
+              if (pass_s[s_it].station_ind == 0) {
+                t_gap = 0;
+              } else {
+                t_gap = info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
               }
               Time::time earliest(info.sale_begin, info.start_time), latest(info.sale_end, info.start_time);
+              earliest += t_gap, latest += t_gap;
               if (earliest.month_day - day > 0 || latest.month_day - day < 0) {
+                ++s_it, ++t_it;
                 continue;
               }
               Time::time leave_s(day, info.start_time), arrive_t(day, info.start_time);
@@ -673,6 +681,18 @@ int main() {
             if (pass_s[s_it].station_ind < pass_t[t_it].station_ind) {
               auto info = train_information.ReadBlock(pass_s[s_it].train_ind);
               if (!info.released) {
+                ++s_it, ++t_it;
+                continue;
+              }
+              int t_gap;
+              if (pass_s[s_it].station_ind == 0) {
+                t_gap = 0;
+              } else {
+                t_gap = info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
+              }
+              Time::time earliest(info.sale_begin, info.start_time), latest(info.sale_end, info.start_time);
+              earliest += t_gap, latest += t_gap;
+              if (earliest.month_day - day > 0 || latest.month_day - day < 0) {
                 ++s_it, ++t_it;
                 continue;
               }
