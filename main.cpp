@@ -451,7 +451,7 @@ int main() {
       }
       if (train_info_pos.Find(trainID).empty()) {
         const int sale_begin_ind = new_train.sale_begin - Time::date(6, 1), sale_end_ind = new_train.sale_end - Time::date(6, 1);
-        for (int i = sale_begin_ind; i <= sale_end_ind + 3; ++i) {
+        for (int i = sale_begin_ind; i <= sale_end_ind; ++i) {
           for (int j = 0; j < new_train.stationNum - 1; ++j) {
             new_train.seat_remain[i][j] = new_train.seatNum;
           }
@@ -471,15 +471,15 @@ int main() {
       auto target = train_info_pos.Find(trainID);
       if (target.empty()) {
         std::cout << '[' << time_stamp << "] -1\n";
+        continue;
+      }
+      int ind = target[0];
+      auto info = train_information.ReadBlock(ind);
+      if (info.released) {
+        std::cout << '[' << time_stamp << "] -1\n";
       } else {
-        int ind = target[0];
-        auto info = train_information.ReadBlock(ind);
-        if (info.released) {
-          std::cout << '[' << time_stamp << "] -1\n";
-        } else {
-          train_info_pos.Delete(trainID, ind);
-          std::cout << '[' << time_stamp << "] 0\n";
-        }
+        train_info_pos.Delete(trainID, ind);
+        std::cout << '[' << time_stamp << "] 0\n";
       }
     } else if (cmd == "release_train") {
       it += 4;
@@ -533,27 +533,28 @@ int main() {
       }
       auto target = train_info_pos.Find(trainID);
       if (target.empty()) {
-        std::cout << '[' << time_stamp << "] -1\n";
+        std::cout << '[' << time_stamp << "] -1\n"; // do not have targeted train
         continue;
       }
       int ind = target[0];
       auto info = train_information.ReadBlock(ind);
       if (info.sale_begin - day > 0 || info.sale_end - day < 0) {
-        std::cout << '[' << time_stamp << "] -1\n";
+        std::cout << '[' << time_stamp << "] -1\n"; // not on sale
         continue;
       }
       std::cout << '[' << time_stamp << "] " << trainID << ' ' << info.type << '\n';
       Time::time t(day, info.start_time);
-      std::cout << info.stations[0] << " xx-xx xx:xx -> " << t << " 0 " << info.seat_remain[day - Time::date(6, 1)][0] << '\n';
+      const int d_ind = day - Time::date(6, 1);
+      std::cout << info.stations[0] << " xx-xx xx:xx -> " << t << " 0 " << info.seat_remain[d_ind][0] << '\n';
       if (info.stationNum == 2) {
         auto arrival = t + info.travel_times[0];
         std::cout << info.stations[1] << ' ' << arrival << " -> xx-xx xx:xx " << info.cumulative_prices[0] << " x\n";
       } else {
         auto not_halt = t + info.travel_times[0], halt = not_halt + info.stopover_times[0];
-        std::cout << info.stations[1] << ' ' << not_halt << " -> " << halt << ' ' << info.cumulative_prices[0] << ' ' << info.seat_remain[halt.month_day - Time::date(6, 1)][1] << '\n';
+        std::cout << info.stations[1] << ' ' << not_halt << " -> " << halt << ' ' << info.cumulative_prices[0] << ' ' << info.seat_remain[d_ind][1] << '\n';
         for (int i = 2; i < info.stationNum - 1; ++i) {
           auto all_not_halt = t + info.travel_times[i - 1], arrival = all_not_halt + info.stopover_times[i - 2], departure = all_not_halt + info.stopover_times[i - 1];
-          std::cout << info.stations[i] << ' ' << arrival << " -> " << departure << ' ' << info.cumulative_prices[i - 1] << ' ' << info.seat_remain[departure.month_day - Time::date(6, 1)][i] << '\n';
+          std::cout << info.stations[i] << ' ' << arrival << " -> " << departure << ' ' << info.cumulative_prices[i - 1] << ' ' << info.seat_remain[d_ind][i] << '\n';
         }
         auto arrival = t + info.travel_times[info.stationNum - 2] + info.stopover_times[info.stationNum - 3];
         std::cout << info.stations[info.stationNum - 1] << ' ' << arrival << " -> xx-xx xx:xx " << info.cumulative_prices[info.stationNum - 2] << " x\n";
@@ -622,8 +623,10 @@ int main() {
               }
               Time::time leave_s(day, info.start_time), arrive_t(day, info.start_time);
               int travel_t;
+              int to_s_leave = 0;
               if (pass_s[s_it].station_ind != 0) {
-                leave_s += info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
+                to_s_leave = info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
+                leave_s += to_s_leave;
                 travel_t = info.travel_times[pass_t[t_it].station_ind - 1] + info.stopover_times[pass_t[t_it].station_ind - 2] - info.travel_times[pass_s[s_it].station_ind - 1] - info.stopover_times[pass_s[s_it].station_ind - 1];
               } else if (pass_t[t_it].station_ind == 1) {
                 travel_t = info.travel_times[0];
@@ -631,6 +634,8 @@ int main() {
                 travel_t = info.travel_times[pass_t[t_it].station_ind - 1] + info.stopover_times[pass_t[t_it].station_ind - 2];
               }
               leave_s.month_day = day;
+              Time::time set_out = leave_s - to_s_leave;
+              const int d_ind = set_out.month_day - Time::date(6, 1);
               arrive_t = leave_s + travel_t;
               int cost;
               if (pass_s[s_it].station_ind == 0) {
@@ -639,16 +644,9 @@ int main() {
                 cost = info.cumulative_prices[pass_t[t_it].station_ind - 1] - info.cumulative_prices[pass_s[s_it].station_ind - 1];
               }
               int max_ticket = info.seatNum;
-              auto leave_i = leave_s;
               for (int i = pass_s[s_it].station_ind; i < pass_t[t_it].station_ind; ++i) {
-                int d = leave_i.month_day - Time::date(6, 1);
-                if (info.seat_remain[d][i] < max_ticket) {
-                  max_ticket = info.seat_remain[d][i];
-                }
-                if (i > 0) {
-                  leave_i = leave_i + (info.travel_times[i] - info.travel_times[i - 1]) + (info.stopover_times[i] - info.stopover_times[i - 1]);
-                } else {
-                  leave_i = leave_i + info.travel_times[i] + info.stopover_times[i];
+                if (info.seat_remain[d_ind][i] < max_ticket) {
+                  max_ticket = info.seat_remain[d_ind][i];
                 }
               }
               same.push({info.trainID.ToString(), arrive_t - leave_s, cost, leave_s, arrive_t,
@@ -687,8 +685,10 @@ int main() {
               }
               Time::time leave_s(day, info.start_time), arrive_t(day, info.start_time);
               int travel_t;
+              int to_s_leave = 0;
               if (pass_s[s_it].station_ind != 0) {
-                leave_s += info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
+                to_s_leave = info.travel_times[pass_s[s_it].station_ind - 1] + info.stopover_times[pass_s[s_it].station_ind - 1];
+                leave_s += to_s_leave;
                 travel_t = info.travel_times[pass_t[t_it].station_ind - 1] + info.stopover_times[pass_t[t_it].station_ind - 2] - info.travel_times[pass_s[s_it].station_ind - 1] - info.stopover_times[pass_s[s_it].station_ind - 1];
               } else if (pass_t[t_it].station_ind == 1) {
                 travel_t = info.travel_times[0];
@@ -696,6 +696,8 @@ int main() {
                 travel_t = info.travel_times[pass_t[t_it].station_ind - 1] + info.stopover_times[pass_t[t_it].station_ind - 2];
               }
               leave_s.month_day = day;
+              Time::time set_out = leave_s - to_s_leave;
+              const int d_ind = set_out.month_day - Time::date(6, 1);
               arrive_t = leave_s + travel_t;
               int cost;
               if (pass_s[s_it].station_ind == 0) {
@@ -704,16 +706,9 @@ int main() {
                 cost = info.cumulative_prices[pass_t[t_it].station_ind - 1] - info.cumulative_prices[pass_s[s_it].station_ind - 1];
               }
               int max_ticket = info.seatNum;
-              auto leave_i = leave_s;
               for (int i = pass_s[s_it].station_ind; i < pass_t[t_it].station_ind; ++i) {
-                int d = leave_i.month_day - Time::date(6, 1);
-                if (info.seat_remain[d][i] < max_ticket) {
-                  max_ticket = info.seat_remain[d][i];
-                }
-                if (i > 0) {
-                  leave_i = leave_i + (info.travel_times[i] - info.travel_times[i - 1]) + (info.stopover_times[i] - info.stopover_times[i - 1]);
-                } else {
-                  leave_i = leave_i + info.travel_times[i] + info.stopover_times[i];
+                if (info.seat_remain[d_ind][i] < max_ticket) {
+                  max_ticket = info.seat_remain[d_ind][i];
                 }
               }
               same.push({info.trainID.ToString(), arrive_t - leave_s, cost, leave_s, arrive_t,
@@ -784,10 +779,12 @@ int main() {
         for (int i = train_station.station_ind + 1; i < info.stationNum; ++i) {
           // we hope to get the needed time to go from start to info.stations[i]
           destination = info.stations[i].ToString();
-          Time::time leave_s(day, info.start_time), arrive_t(day, info.start_time);
+          Time::time leave_s(day, info.start_time);
           int travel_t;
+          int to_s_leave = 0;
           if (train_station.station_ind != 0) {
-            leave_s += info.travel_times[train_station.station_ind - 1] + info.stopover_times[train_station.station_ind - 1];
+            to_s_leave = info.travel_times[train_station.station_ind - 1] + info.stopover_times[train_station.station_ind - 1];
+            leave_s += to_s_leave;
             travel_t = info.travel_times[i - 1] + info.stopover_times[i - 2] - info.travel_times[train_station.station_ind - 1] - info.stopover_times[train_station.station_ind - 1];
           } else if (i == 1) {
             travel_t = info.travel_times[0];
@@ -795,7 +792,8 @@ int main() {
             travel_t = info.travel_times[i - 1] + info.stopover_times[i - 2];
           }
           leave_s.month_day = day;
-          arrive_t = leave_s + travel_t;
+          Time::time arrive_t = leave_s + travel_t, set_out = leave_s - to_s_leave;
+          const int d_ind = set_out.month_day - Time::date(6, 1);
           int cost;
           if (train_station.station_ind == 0) {
             cost = info.cumulative_prices[i - 1];
@@ -803,16 +801,9 @@ int main() {
             cost = info.cumulative_prices[i - 1] - info.cumulative_prices[train_station.station_ind - 1];
           }
           int max_ticket = info.seatNum;
-          auto leave_i = leave_s;
           for (int ind = train_station.station_ind; ind < i; ++ind) {
-            int d = leave_i.month_day - Time::date(6, 1);
-            if (info.seat_remain[d][ind] < max_ticket) {
-              max_ticket = info.seat_remain[d][ind];
-            }
-            if (ind > 0) {
-              leave_i = leave_i + (info.travel_times[ind] - info.travel_times[ind - 1]) + (info.stopover_times[ind] - info.stopover_times[ind - 1]);
-            } else {
-              leave_i = leave_i + info.travel_times[ind] + info.stopover_times[ind];
+            if (info.seat_remain[d_ind][ind] < max_ticket) {
+              max_ticket = info.seat_remain[d_ind][ind];
             }
           }
           same.insert({destination, {info.trainID.ToString(), arrive_t - leave_s, cost, leave_s, arrive_t,
@@ -835,12 +826,12 @@ int main() {
             if (find_transfer_station->second.trainID == info.trainID.ToString()) {
               continue;
             }
-            Time::time leave_s(find_transfer_station->second.arrive.month_day, info.start_time), arrive_t = leave_s;
-            int start_to_s = 0;
+            Time::time leave_s(find_transfer_station->second.arrive.month_day, info.start_time);
+            int to_s_leave = 0;
             int travel_t;
             if (i != 0) {
-              start_to_s = info.travel_times[i - 1] + info.stopover_times[i - 1];
-              leave_s += start_to_s;
+              to_s_leave = info.travel_times[i - 1] + info.stopover_times[i - 1];
+              leave_s += to_s_leave;
               travel_t = info.travel_times[train_station.station_ind - 1] + info.stopover_times[train_station.station_ind - 2] - info.travel_times[i - 1] - info.stopover_times[i - 1];
             } else if (train_station.station_ind == 1) {
               travel_t = info.travel_times[0];
@@ -852,11 +843,12 @@ int main() {
               leave_s.month_day += 1;
             }
             Time::time earliest2(info.sale_begin, info.start_time), latest2(info.sale_end, info.start_time);
-            earliest2 += start_to_s, latest2 += start_to_s;
+            earliest2 += to_s_leave, latest2 += to_s_leave;
             if (earliest2 - leave_s > 0 || latest2 - leave_s < 0) {
               continue;
             }
-            arrive_t = leave_s + travel_t;
+            auto arrive_t = leave_s + travel_t, set_out = leave_s - to_s_leave;
+            const int d_ind = set_out.month_day - Time::date(6, 1);
             int cost2;
             if (i == 0) {
               cost2 = info.cumulative_prices[train_station.station_ind - 1];
@@ -865,16 +857,9 @@ int main() {
             }
             const int total_cost = cost2 + find_transfer_station->second.cost;
             int max_ticket = info.seatNum;
-            auto leave_i = leave_s;
             for (int ind = i; ind < train_station.station_ind; ++ind) {
-              int d = leave_i.month_day - Time::date(6, 1);
-              if (info.seat_remain[d][ind] < max_ticket) {
-                max_ticket = info.seat_remain[d][ind];
-              }
-              if (ind > 0) {
-                leave_i = leave_i + (info.travel_times[ind] - info.travel_times[ind - 1]) + (info.stopover_times[ind] - info.stopover_times[ind - 1]);
-              } else {
-                leave_i = leave_i + info.travel_times[ind] + info.stopover_times[ind];
+              if (info.seat_remain[d_ind][ind] < max_ticket) {
+                max_ticket = info.seat_remain[d_ind][ind];
               }
             }
             int time2 = arrive_t - leave_s;
@@ -938,12 +923,12 @@ int main() {
             if (find_transfer_station->second.trainID == info.trainID.ToString()) {
               continue;
             }
-            Time::time leave_s(find_transfer_station->second.arrive.month_day, info.start_time), arrive_t = leave_s;
-            int start_to_s = 0;
+            Time::time leave_s(find_transfer_station->second.arrive.month_day, info.start_time);
+            int to_s_leave = 0;
             int travel_t;
             if (i != 0) {
-              start_to_s = info.travel_times[i - 1] + info.stopover_times[i - 1];
-              leave_s += start_to_s;
+              to_s_leave = info.travel_times[i - 1] + info.stopover_times[i - 1];
+              leave_s += to_s_leave;
               travel_t = info.travel_times[train_station.station_ind - 1] + info.stopover_times[train_station.station_ind - 2] - info.travel_times[i - 1] - info.stopover_times[i - 1];
             } else if (train_station.station_ind == 1) {
               travel_t = info.travel_times[0];
@@ -955,11 +940,12 @@ int main() {
               leave_s.month_day += 1;
             }
             Time::time earliest2(info.sale_begin, info.start_time), latest2(info.sale_end, info.start_time);
-            earliest2 += start_to_s, latest2 += start_to_s;
+            earliest2 += to_s_leave, latest2 += to_s_leave;
             if (earliest2 - leave_s > 0 || latest2 - leave_s < 0) {
               continue;
             }
-            arrive_t = leave_s + travel_t;
+            auto arrive_t = leave_s + travel_t, set_out = leave_s - to_s_leave;
+            const int d_ind = set_out.month_day - Time::date(6, 1);
             int cost2;
             if (i == 0) {
               cost2 = info.cumulative_prices[train_station.station_ind - 1];
@@ -968,16 +954,9 @@ int main() {
             }
             const int total_cost = cost2 + find_transfer_station->second.cost;
             int max_ticket = info.seatNum;
-            auto leave_i = leave_s;
             for (int ind = i; ind < train_station.station_ind; ++ind) {
-              int d = leave_i.month_day - Time::date(6, 1);
-              if (info.seat_remain[d][ind] < max_ticket) {
-                max_ticket = info.seat_remain[d][ind];
-              }
-              if (ind > 0) {
-                leave_i = leave_i + (info.travel_times[ind] - info.travel_times[ind - 1]) + (info.stopover_times[ind] - info.stopover_times[ind - 1]);
-              } else {
-                leave_i = leave_i + info.travel_times[ind] + info.stopover_times[ind];
+              if (info.seat_remain[d_ind][ind] < max_ticket) {
+                max_ticket = info.seat_remain[d_ind][ind];
               }
             }
             int time2 = arrive_t - leave_s;
@@ -1126,32 +1105,24 @@ int main() {
         std::cout << '[' << time_stamp << "] -1\n"; // out of the range of sale
         continue;
       }
-      Time::time leave_i(day, info.start_time);
+      Time::time leave_s(day, info.start_time);
+      int to_s_leave = 0;
       if (ind_s != 0) {
-        leave_i += info.travel_times[ind_s - 1] + info.stopover_times[ind_s - 1];
+        to_s_leave = info.travel_times[ind_s - 1] + info.stopover_times[ind_s - 1];
+        leave_s += to_s_leave;
       }
-      leave_i.month_day = day;
-      auto leave_ii = leave_i;
-      Time::date normal(6, 1);
+      leave_s.month_day = day;
+      auto set_out = leave_s - to_s_leave;
+      const int d_ind = set_out.month_day - Time::date(6, 1);
       int max_ticket = 2147483647;
       for (int i = ind_s; i < ind_t; ++i) {
-        if (info.seat_remain[leave_i.month_day - normal][i] < max_ticket) {
-          max_ticket = info.seat_remain[leave_i.month_day - normal][i];
-        }
-        if (i > 0) {
-          leave_i = leave_i + (info.travel_times[i] - info.travel_times[i - 1]) + (info.stopover_times[i] - info.stopover_times[i - 1]);
-        } else {
-          leave_i = leave_i + info.travel_times[i] + info.stopover_times[i];
+        if (info.seat_remain[d_ind][i] < max_ticket) {
+          max_ticket = info.seat_remain[d_ind][i];
         }
       }
       if (max_ticket >= num) {
         for (int i = ind_s; i < ind_t; ++i) {
-          info.seat_remain[leave_ii.month_day - normal][i] -= num;
-          if (i > 0) {
-            leave_ii = leave_ii + (info.travel_times[i] - info.travel_times[i - 1]) + (info.stopover_times[i] - info.stopover_times[i - 1]);
-          } else {
-            leave_ii = leave_ii + info.travel_times[i] + info.stopover_times[i];
-          }
+          info.seat_remain[d_ind][i] -= num;
         }
         train_information.WriteBack(info, target_pos[0]);
         int t_travel;
@@ -1174,10 +1145,9 @@ int main() {
         } else {
           price = info.cumulative_prices[ind_t - 1] - info.cumulative_prices[ind_s - 1];
         }
-        Time::time leaving_time(day, earliest.hour_min);
         recording.Insert(username, {fixed_str<20>(username), time_stamp, info.trainID,
-          fixed_Chinese<10>(from), fixed_Chinese<10>(to), leaving_time,
-          leaving_time + t_travel, price, num, 0, ind_s, ind_t});
+          fixed_Chinese<10>(from), fixed_Chinese<10>(to), leave_s,
+          leave_s + t_travel, price, num, 0, ind_s, ind_t});
         std::cout << '[' << time_stamp << "] " << price * num << '\n';
       } else {
         if (!queue) {
@@ -1270,57 +1240,42 @@ int main() {
       std::string trainID = to_be_refunded.trainID.ToString();
       auto train_info_ind = train_info_pos.Find(trainID);
       auto info = train_information.ReadBlock(train_info_ind[0]);
-      Time::time ti = to_be_refunded.leaving;
+      Time::time leave_s = to_be_refunded.leaving;
+      int to_s_leave = 0;
+      if (to_be_refunded.ind_s != 0) {
+        to_s_leave = info.travel_times[to_be_refunded.ind_s - 1] + info.stopover_times[to_be_refunded.ind_s - 1];
+      }
+      auto set_out = leave_s - to_s_leave;
+      const int d_ind = set_out.month_day - Time::date(6, 1);
       for (int i = to_be_refunded.ind_s; i < to_be_refunded.ind_t; ++i) {
-        info.seat_remain[ti.month_day - Time::date(6, 1)][i] += to_be_refunded.num;
-        if (i == 0) {
-          ti += info.travel_times[0] + info.stopover_times[0];
-        } else {
-          ti += info.travel_times[i] + info.stopover_times[i] - info.travel_times[i - 1] - info.stopover_times[i - 1];
-        }
+        info.seat_remain[d_ind][i] += to_be_refunded.num;
       }
       recording.Delete(username, to_be_refunded);
       to_be_refunded.status = 2;
       recording.Insert(username, to_be_refunded);
       auto waiting_list = waiting.Find(trainID);
       for (const auto &request : waiting_list) {
-        int travel_t;
-        if (request.ind_start == 0) {
-          travel_t = info.travel_times[request.ind_destination - 1] + info.stopover_times[request.ind_destination - 1];
-        } else {
-          travel_t = info.travel_times[request.ind_destination - 1] + info.stopover_times[request.ind_destination - 1]
-              - info.travel_times[request.ind_start - 1] - info.stopover_times[request.ind_start - 1];
+        Time::time r_leave_s(request.date, info.start_time);
+        int r_to_s_leave = 0;
+        if (request.ind_start != 0) {
+          r_to_s_leave = info.travel_times[request.ind_start - 1] + info.stopover_times[request.ind_start - 1];
+          r_leave_s += r_to_s_leave;
         }
-        Time::time depart(info.sale_begin, info.start_time);
-        Time::time depart_needed = depart + travel_t;
-        const int delta_date = request.date - depart_needed.month_day;
-        depart.month_day += delta_date;
-        if (request.ind_start > 0) {
-          depart += info.travel_times[request.ind_start - 1] + info.stopover_times[request.ind_start - 1];
-        }
-        ti = depart; // the departure time at ind_start
+        r_leave_s.month_day = request.date;
+        auto r_set_out = r_leave_s - r_to_s_leave;
+        const int r_d_ind = r_set_out.month_day - Time::date(6, 1);
         bool satisfiable = true;
         for (int i = request.ind_start; i < request.ind_destination; ++i) {
-          if (info.seat_remain[depart.month_day - Time::date(6, 1)][i] < request.require_seats) {
+          if (info.seat_remain[r_d_ind][i] < request.require_seats) {
             satisfiable = false;
             break;
-          }
-          if (i == 0) {
-            depart += info.travel_times[0] + info.stopover_times[0];
-          } else {
-            depart += info.travel_times[i] + info.stopover_times[i] - info.travel_times[i - 1] - info.stopover_times[i - 1];
           }
         }
         if (!satisfiable) {
           continue;
         }
         for (int i = request.ind_start; i < request.ind_destination; ++i) {
-          info.seat_remain[ti.month_day - Time::date(6, 1)][i] -= request.require_seats;
-          if (i == 0) {
-            ti += info.travel_times[0] + info.stopover_times[0];
-          } else {
-            ti += info.travel_times[i] + info.stopover_times[i] - info.travel_times[i - 1] - info.stopover_times[i - 1];
-          }
+          info.seat_remain[r_d_ind][i] -= request.require_seats;
         }
         waiting.Delete(trainID, request);
         std::string user_name = request.username.ToString();
