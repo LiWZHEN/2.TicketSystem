@@ -11,6 +11,7 @@ namespace sjtu {
     const unsigned long long P = 131;
     const unsigned long long Q = 107;
     const unsigned long long M = 1e9 + 7;
+    const unsigned long long N = 1e9 + 9;
 
     struct hash_pair {
       unsigned long long hash1 = 0;
@@ -48,7 +49,7 @@ namespace sjtu {
       unsigned long long hash2 = 0;
       for (int i = 0; i < str.length(); ++i) {
         hash1 = (hash1 * P + str[i]) % M;
-        hash2 = (hash2 * Q + str[i]) % M;
+        hash2 = (hash2 * Q + str[i]) % N;
       }
       return {hash1, hash2};
     }
