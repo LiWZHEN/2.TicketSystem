@@ -11,6 +11,9 @@
 #include "ticket.h"
 
 int main() {
+  std::ios::sync_with_stdio(false);
+  std::cin.tie(nullptr);
+  std::cout.tie(nullptr);
   std::string command;
   sjtu::map<std::string, user::user_info> logged;
   sjtu::bpt<user::user_info> users("users_map_info.txt", "users_data.txt");
@@ -289,7 +292,7 @@ int main() {
         }
       }
       auto cur_user = logged.find(cur_username);
-      auto user_info = users.Find(username);
+      const auto user_info = users.Find(username);
       if (cur_user == logged.end() || user_info.empty() || (cur_user->second.privilege <= user_info[0].privilege && cur_username != username) || cur_user->second.privilege <= privilege) {
         std::cout << '[' << time_stamp << "] -1\n";
       } else {
@@ -324,13 +327,9 @@ int main() {
         }
         ++it;
         if (command[it] == 'i') {
-          ++it;
-          ++it;
-          while (it < l) {
+          it += 2;
+          while (it < l && command[it] != ' ') {
             trainID += command[it++];
-            if (it + 1 < l && command[it + 1] == '-') {
-              break;
-            }
           }
           new_train.trainID = trainID;
         } else if (command[it] == 'n') {
@@ -465,7 +464,7 @@ int main() {
     } else if (cmd == "delete_train") {
       it += 4;
       std::string trainID;
-      while (it < l) {
+      while (it < l && command[it] != ' ') {
         trainID += command[it++];
       }
       auto target = train_info_pos.Find(trainID);
@@ -484,7 +483,7 @@ int main() {
     } else if (cmd == "release_train") {
       it += 4;
       std::string trainID;
-      while (it < l) {
+      while (it < l && command[it] != ' ') {
         trainID += command[it++];
       }
       auto target = train_info_pos.Find(trainID);
@@ -517,11 +516,8 @@ int main() {
         ++it;
         if (command[it] == 'i') {
           it += 2;
-          while (it < l) {
+          while (it < l && command[it] != ' ') {
             trainID += command[it++];
-            if (it + 1 < l && command[it + 1] == '-') {
-              break;
-            }
           }
         } else if (command[it] == 'd') {
           it += 2;
@@ -1036,7 +1032,7 @@ int main() {
           }
         } else if (command[it] == 'i') {
           it += 2;
-          while (it < l && command[it] > ' ') {
+          while (it < l && command[it] != ' ') {
             trainID += command[it++];
           }
         } else if (command[it] == 'd') {
@@ -1119,6 +1115,10 @@ int main() {
       earliest += t_gap, latest += t_gap;
       if (earliest.month_day - day > 0 || latest.month_day - day < 0) {
         std::cout << '[' << time_stamp << "] -1\n"; // out of the range of sale
+        continue;
+      }
+      if (num > info.seatNum) {
+        std::cout << '[' << time_stamp << "] -1\n"; // cannot be satisfied
         continue;
       }
       Time::time leave_s(day, info.start_time);
