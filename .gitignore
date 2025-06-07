@@ -1,7 +1,7 @@
 run-test
 cmake-build-debug
-bpt/test/double_hash_value.xlsx
-data
 Hint.md
 my_test.zip
 my_test
+testcases
+test.cpp
