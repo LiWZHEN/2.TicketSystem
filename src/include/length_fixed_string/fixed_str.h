@@ -58,13 +58,10 @@ public:
   }
 
   bool operator>(const fixed_str &other) const {
-    if (len > other.len) {
-      return true;
-    }
-    if (len < other.len) {
-      return false;
-    }
     for (int i = 0; i < len; ++i) {
+      if (i >= other.len) {
+        return true;
+      }
       if (str[i] > other.str[i]) {
         return true;
       }
@@ -76,21 +73,7 @@ public:
   }
 
   bool operator<(const fixed_str &other) const {
-    if (len < other.len) {
-      return true;
-    }
-    if (len > other.len) {
-      return false;
-    }
-    for (int i = 0; i < len; ++i) {
-      if (str[i] < other.str[i]) {
-        return true;
-      }
-      if (str[i] > other.str[i]) {
-        return false;
-      }
-    }
-    return false;
+    return other > *this;
   }
 
   bool operator>=(const fixed_str &other) const {
