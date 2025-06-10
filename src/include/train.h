@@ -59,12 +59,18 @@ namespace train {
   };
 
   struct train_time_cost {
-    std::string trainID;
+    fixed_str<20> trainID;
     int time;
     int cost;
     Time::time leave, arrive;
-    std::string from, to;
+    fixed_Chinese<10> from, to;
     int seat;
+
+    train_time_cost() = default;
+    train_time_cost(const fixed_str<20> &id, const int t, const int c, const Time::time &leave, const Time::time &arrive,
+        const fixed_Chinese<10> &from, const fixed_Chinese<10> &to, const int seat)
+        : trainID(id), time(t), cost(c), leave(leave),
+          arrive(arrive), from(from), to(to), seat(seat) {}
 
     friend std::ostream &operator<<(std::ostream &output, const train_time_cost &t) {
       output << t.trainID << ' ' << t.from << ' ' << t.leave << " -> " << t.to << ' ' << t.arrive << ' ' << t.cost << ' ' << t.seat;

@@ -645,8 +645,8 @@ int main() {
                   max_ticket = info.seat_remain[d_ind][i];
                 }
               }
-              same.push({info.trainID.ToString(), arrive_t - leave_s, cost, leave_s, arrive_t,
-                info.stations[pass_s[s_it].station_ind].ToString(), info.stations[pass_t[t_it].station_ind].ToString(), max_ticket});
+              same.push({info.trainID, arrive_t - leave_s, cost, leave_s, arrive_t,
+                info.stations[pass_s[s_it].station_ind], info.stations[pass_t[t_it].station_ind], max_ticket});
             }
             ++s_it, ++t_it;
           } else if (pass_s[s_it].train_ind < pass_t[t_it].train_ind) {
@@ -707,8 +707,8 @@ int main() {
                   max_ticket = info.seat_remain[d_ind][i];
                 }
               }
-              same.push({info.trainID.ToString(), arrive_t - leave_s, cost, leave_s, arrive_t,
-                info.stations[pass_s[s_it].station_ind].ToString(), info.stations[pass_t[t_it].station_ind].ToString(), max_ticket});
+              same.push({info.trainID, arrive_t - leave_s, cost, leave_s, arrive_t,
+                info.stations[pass_s[s_it].station_ind], info.stations[pass_t[t_it].station_ind], max_ticket});
             }
             ++s_it, ++t_it;
           } else if (pass_s[s_it].train_ind < pass_t[t_it].train_ind) {
@@ -809,8 +809,8 @@ int main() {
               max_ticket = info.seat_remain[d_ind][ind];
             }
           }
-          same[destination].push_back({info.trainID.ToString(), arrive_t - leave_s, cost, leave_s, arrive_t,
-                info.stations[train_station.station_ind].ToString(), info.stations[i].ToString(), max_ticket});
+          same[destination].push_back({info.trainID, arrive_t - leave_s, cost, leave_s, arrive_t,
+                info.stations[train_station.station_ind], info.stations[i], max_ticket});
         }
       }
       if (sort_by_time) { // total_time, total_cost, trainID1, trainID2;
@@ -824,7 +824,7 @@ int main() {
             start = info.stations[i].ToString();
             auto find_transfer_station = same[start];
             for (const auto &transfer_station : find_transfer_station) {
-              if (transfer_station.trainID == info.trainID.ToString()) {
+              if (transfer_station.trainID == info.trainID) {
                 continue;
               }
               Time::time leave_s(transfer_station.arrive.month_day, info.start_time);
@@ -875,7 +875,7 @@ int main() {
                 min_time = total_time;
                 min_cost = total_cost;
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
                 continue;
               }
               if (total_cost > min_cost) {
@@ -884,7 +884,7 @@ int main() {
               if (total_cost < min_cost) {
                 min_cost = total_cost;
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
                 continue;
               }
               if (transfer_station.trainID > train1.trainID) {
@@ -892,16 +892,15 @@ int main() {
               }
               if (transfer_station.trainID < train1.trainID) {
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
                 continue;
               }
-              std::string cur_train2ID = info.trainID.ToString();
-              if (cur_train2ID > train2.trainID) {
+              if (info.trainID > train2.trainID) {
                 continue;
               }
-              if (cur_train2ID < train2.trainID) {
+              if (info.trainID < train2.trainID) {
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
               }
             }
           }
@@ -923,7 +922,7 @@ int main() {
             start = info.stations[i].ToString();
             auto find_transfer_station = same[start];
             for (const auto &transfer_station : find_transfer_station) {
-              if (transfer_station.trainID == info.trainID.ToString()) {
+              if (transfer_station.trainID == info.trainID) {
                 continue;
               }
               Time::time leave_s(transfer_station.arrive.month_day, info.start_time);
@@ -974,7 +973,7 @@ int main() {
                 min_time = total_time;
                 min_cost = total_cost;
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
                 continue;
               }
               if (total_time > min_time) {
@@ -983,7 +982,7 @@ int main() {
               if (total_time < min_time) {
                 min_cost = total_cost;
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
                 continue;
               }
               if (transfer_station.trainID > train1.trainID) {
@@ -991,16 +990,16 @@ int main() {
               }
               if (transfer_station.trainID < train1.trainID) {
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
                 continue;
               }
               std::string cur_train2ID = info.trainID.ToString();
-              if (cur_train2ID > train2.trainID) {
+              if (info.trainID > train2.trainID) {
                 continue;
               }
-              if (cur_train2ID < train2.trainID) {
+              if (info.trainID < train2.trainID) {
                 train1 = transfer_station;
-                train2 = {info.trainID.ToString(), time2, cost2, leave_s, arrive_t, start, destination, max_ticket};
+                train2 = train::train_time_cost(info.trainID, time2, cost2, leave_s, arrive_t, fixed_Chinese<10>(start), fixed_Chinese<10>(destination), max_ticket);
               }
             }
           }
